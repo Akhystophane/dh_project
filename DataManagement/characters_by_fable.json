@@ -1,0 +1,1391 @@
+{
+    "183_THE_CORMORANT_AND_THE_FISHES": {
+        "Cormorant": 4,
+        "Cray-fish": 2,
+        "fish": 6
+    },
+    "108_THE_COCKEREL_THE_CAT_AND_THE_LITTLE_RAT": {
+        "Rat": 5,
+        "Capon": 1,
+        "Cat": 2
+    },
+    "142_THE_HEAD_AND_THE_TAIL_OF_THE_SERPENT": {
+        "Snake": 5,
+        "Head": 3,
+        "Tail": 5,
+        "Jove": 3
+    },
+    "175_THE_CAT_AND_THE_FOX": {
+        "Fox": 5,
+        "Cat": 4,
+        "Hounds": 3,
+        "Puss": 1,
+        "Reynard": 1,
+        "Dogs": 1
+    },
+    "191_THE_TORTOISE_AND_THE_TWO_DUCKS": {
+        "Tortoise": 5,
+        "Ducks": 3
+    },
+    "219_THE_QUARREL_OF_THE_DOGS_AND_THE_CATS_AND_ALSO_THAT_OF_THE_CATS": {
+        "Dogs": 3,
+        "Cats": 6,
+        "Mice": 4
+    },
+    "74_THE_JAY_DRESSED_IN_PEACOCKS_PLUMES": {
+        "Peacock": 3,
+        "Jay": 4
+    },
+    "176_THE_SCULPTOR_AND_THE_STATUE_OF_JUPITER": {},
+    "166_THE_MADMAN_WHO_SOLD_WISDOM": {
+        "Madman": 4,
+        "wise men": 2,
+        "sage": 1,
+        "fool": 2,
+        "rogue": 1,
+        "buffoon": 1,
+        "dupes": 1,
+        "people": 3
+    },
+    "152_THE_TWO_FRIENDS": {
+        "Friend": 6,
+        "slave": 1
+    },
+    "134_THE_TWO_FOWLS": {
+        "Barn-door Fowl": 2,
+        "Vulture": 1
+    },
+    "204_THE_OLD_MAN_AND_THE_THREE_YOUNG_MEN": {
+        "Old Man": 6,
+        "Youths": 3,
+        "Young Men": 3,
+        "Great Grandchildren": 1,
+        "Sage": 1
+    },
+    "52_THE_SHEPHERD_AND_THE_SEA": {
+        "Shepherd": 4,
+        "Tircis": 1,
+        "Pierrot": 1,
+        "nymphs": 1,
+        "Circe": 1
+    },
+    "197_THE_PARTRIDGE_AND_THE_FOWLS": {
+        "Partridge": 5,
+        "Cocks": 2,
+        "Game-cock": 1,
+        "Fowls": 1
+    },
+    "193_THE_MISER_AND_HIS_FRIEND": {
+        "Miser": 6,
+        "comrade": 4,
+        "thief": 1
+    },
+    "28_THE_ASS_LADEN_WITH_SPONGES_AND_THE_ASS_LADEN_WITH_SALT": {
+        "Peasant": 1,
+        "Emperor": 1,
+        "Steed": 2,
+        "Ass": 3,
+        "Pilgrim": 1,
+        "Comrade": 1,
+        "Creature": 1,
+        "Rider": 1,
+        "Man": 1
+    },
+    "109_THE_FOX_THE_MONKEY_AND_THE_OTHER_ANIMALS": {
+        "Lion": 2,
+        "Dragon": 1,
+        "Monkey": 2,
+        "Fox": 3
+    },
+    "228_THE_ENGLISH_FOX": {
+        "Reynard": 2,
+        "Fox": 4,
+        "dogs": 4,
+        "badgers": 1,
+        "owls": 1
+    },
+    "120_THE_HORSE_AND_THE_ASS": {
+        "Ass": 3,
+        "Horse": 5,
+        "Donkey": 1
+    },
+    "76_BATTLE_BETWEEN_THE_RATS_AND_WEASELS": {
+        "Weasel": 6,
+        "Rat": 8,
+        "Ratapon": 1,
+        "Artapax": 1,
+        "Meridarpax": 1,
+        "Psicarpax": 1
+    },
+    "61_THE_LION_DEFEATED_BY_MAN": {
+        "Lion": 3
+    },
+    "27_THE_LION_AND_THE_GNAT": {
+        "Lion": 5,
+        "Gnat": 6
+    },
+    "130_THE_VULTURES_AND_THE_PIGEONS": {
+        "Vulture": 6,
+        "Pigeon": 4,
+        "Lion": 3,
+        "Bear": 1,
+        "Monkey": 1,
+        "Fox": 2
+    },
+    "158_THE_ASS_AND_THE_DOG": {
+        "Ass": 7,
+        "Dog": 5,
+        "Wolf": 2
+    },
+    "117_THE_CARTER_STUCK_IN_THE_MUD": {
+        "Phaeton": 1,
+        "Carter": 3,
+        "Hercules": 3
+    },
+    "70_THE_GARDENER_AND_HIS_MASTER": {
+        "hare": 3,
+        "lord": 4,
+        "peasant": 2,
+        "daughter": 2,
+        "dogs": 2,
+        "horses": 1,
+        "troop": 1,
+        "valets": 1
+    },
+    "185_THE_SHEPHERD_AND_THE_KING": {
+        "Shepherd": 8,
+        "King": 5,
+        "Hermit": 3,
+        "Monarch": 3,
+        "Snake": 2
+    },
+    "119_THE_BIRDCATCHER_THE_HAWK_AND_THE_SKYLARK": {
+        "Countryman": 1,
+        "Lark": 1,
+        "Sparrow Hawk": 2,
+        "Hawk": 1
+    },
+    "84_THE_SAYING_OF_SOCRATES": {},
+    "145_THE_POWER_OF_FABLES": {
+        "Weasel": 1,
+        "Rabbit": 1,
+        "Hercules": 1,
+        "Hydra": 1,
+        "Ceres": 2,
+        "Eel": 1,
+        "Swallow": 1
+    },
+    "141_THE_LION_THE_WOLF_AND_THE_FOX": {
+        "Lion": 3,
+        "Fox": 3,
+        "Wolf": 3
+    },
+    "24_THE_WOLF_PLEADING_AGAINST_THE_FOX_BEFORE_THE_APE": {
+        "Wolf": 2,
+        "Fox": 2,
+        "Ape": 2
+    },
+    "10_THE_MAN_AND_HIS_IMAGE": {
+        "Narcissus": 4,
+        "Fate": 1,
+        "Soul": 1,
+        "Mirrors": 5,
+        "brook": 2
+    },
+    "88_FORTUNE_AND_THE_LITTLE_CHILD": {
+        "Fortune": 5
+    },
+    "127_THE_MAN_BADLY_MARRIED": {
+        "Monsieur": 5,
+        "Phillis": 1,
+        "Servants": 2,
+        "Wife": 2
+    },
+    "156_THE_HOROSCOPE": {
+        "Man": 1,
+        "Father": 1,
+        "Son": 1,
+        "Lion": 3,
+        "Youth": 1,
+        "Eagle": 1,
+        "Tortoise": 1,
+        "Pluto": 1,
+        "Æschylus": 3,
+        "Jupiter": 1
+    },
+    "94_THE_LABOURING_MAN_AND_HIS_CHILDREN": {
+        "Labourer": 3,
+        "sons": 3,
+        "parents": 1
+    },
+    "131_THE_MILKMAID_AND_THE_MILKPAIL": {
+        "Perette": 5,
+        "cow": 2,
+        "calf": 2,
+        "pig": 2,
+        "chicken": 1
+    },
+    "155_THE_FUNERAL_OF_THE_LIONESS": {
+        "Lion": 3,
+        "Prince": 1,
+        "King": 3,
+        "Stag": 3,
+        "Queen": 1,
+        "Wolves": 1,
+        "Turk": 1,
+        "Merchant": 1,
+        "Shepherd": 1,
+        "Dog": 1,
+        "Sheep": 1,
+        "Terriers": 1,
+        "Cur": 1
+    },
+    "217_THE_BAT_THE_BUSH_AND_THE_DUCK": {
+        "Bat": 4,
+        "Bush": 4,
+        "Duck": 4
+    },
+    "25_THE_MIDDLEAGED_MAN_AND_THE_TWO_WIDOWS": {
+        "Man": 6,
+        "Widow": 3
+    },
+    "165_EDUCATION": {
+        "Cæsar": 5,
+        "Laridon": 5,
+        "dog": 3,
+        "Turnspits": 1,
+        "stags": 1,
+        "boars": 1
+    },
+    "53_THE_DRUNKARD_AND_HIS_WIFE": {
+        "Bacchus": 1,
+        "Fury": 1,
+        "Lucifer": 1,
+        "Pluto": 1,
+        "Satan": 1,
+        "sot": 3,
+        "wife": 2
+    },
+    "23_THE_COUNCIL_HELD_BY_THE_RATS": {
+        "Cat": 7,
+        "Rat": 5,
+        "Dean": 1
+    },
+    "89_THE_EARTHEN_POT_AND_THE_IRON_POT": {
+        "Iron Pot": 5,
+        "Earthen Pot": 5
+    },
+    "81_THE_HORSE_WISHING_TO_BE_REVENGED_ON_THE_STAG": {
+        "Horse": 5,
+        "Ass": 1,
+        "Mule": 1,
+        "Stag": 2,
+        "Man": 4
+    },
+    "85_THE_OLD_MAN_AND_HIS_CHILDREN": {
+        "Old Man": 6,
+        "sons": 5,
+        "brothers": 3,
+        "Death": 1,
+        "neighbour": 1,
+        "judge": 1,
+        "creditors": 2,
+        "creatures": 1
+    },
+    "12_THE_WOLF_AND_THE_LAMB": {
+        "Lamb": 6,
+        "Wolf": 6
+    },
+    "178_THE_MONKEY_AND_THE_CAT": {
+        "Bertrand": 6,
+        "Raton": 6,
+        "Monkey": 1,
+        "Cat": 1
+    },
+    "207_THE_COMPANIONS_OF_ULYSSES": {
+        "Ulysses": 5,
+        "Circe": 3,
+        "Lion": 3,
+        "Bear": 3,
+        "Wolf": 3
+    },
+    "1_THE_GRASSHOPPER_AND_THE_ANT": {
+        "Grasshopper": 5,
+        "Ant": 5
+    },
+    "200_THE_TWO_PARROTS_THE_MONARCH_AND_HIS_SON": {
+        "Parrot": 5,
+        "Sparrow": 2,
+        "Prince": 4,
+        "King": 2
+    },
+    "129_THE_WISHES": {
+        "Spirit": 4,
+        "genii": 3
+    },
+    "98_THE_HARE_THE_PARTRIDGE": {
+        "Hare": 3,
+        "Partridge": 3,
+        "Brifaut": 1,
+        "Miraut": 1,
+        "Rustaut": 1,
+        "Goshawk": 1,
+        "Stag": 2,
+        "Vine": 2,
+        "dogs": 2,
+        "hunters": 2
+    },
+    "34_THE_PEACOCK_COMPLAINING_TO_JUNO": {
+        "Peacock": 3,
+        "Nightingale": 2,
+        "Juno": 3,
+        "Falcon": 1,
+        "Eagle": 1,
+        "Raven": 1,
+        "Crow": 1
+    },
+    "167_THE_CAT_AND_THE_RAT": {
+        "Master Cat": 7,
+        "Master Rat": 6,
+        "Weasel": 4,
+        "Master Owl": 4,
+        "Sir Gnaw-cheese": 2,
+        "Puss": 1
+    },
+    "57_THE_MISER_WHO_LOST_HIS_TREASURE": {
+        "Miser": 7,
+        "peasant": 1,
+        "man": 3
+    },
+    "32_THE_HARE_AND_THE_FROGS": {
+        "Hare": 7,
+        "Frogs": 2
+    },
+    "124_THE_ANIMALS_SICK_OF_THE_PLAGUE": {
+        "Lion": 3,
+        "Fox": 3,
+        "Wolves": 2,
+        "Sheep": 2,
+        "Turtle-doves": 1,
+        "Tiger": 1,
+        "Bear": 1,
+        "Ass": 1,
+        "Wolf": 1
+    },
+    "9_THE_TOWN_RAT_AND_THE_COUNTRY_RAT": {
+        "Rat": 4,
+        "Turkey": 1
+    },
+    "173_THE_ACORN_AND_THE_GOURD": {
+        "Jove": 4,
+        "Gourd": 3,
+        "Pumpkin": 3,
+        "Bumpkin": 2,
+        "Oak": 4,
+        "Acorn": 4,
+        "Tony": 2,
+        "Hind": 1
+    },
+    "162_JUPITER_AND_THE_THUNDERBOLTS": {
+        "Jove": 8,
+        "Mercury": 1,
+        "Fury": 1,
+        "Tisiphone": 1,
+        "Megæra": 1,
+        "Alecton": 1,
+        "Vulcan": 2
+    },
+    "139_THE_COBBLER_AND_THE_BANKER": {
+        "Cobbler": 5,
+        "Banker": 4
+    },
+    "150_THE_JOKER_AND_THE_FISHES": {
+        "wag": 1,
+        "fishes": 5,
+        "creatures": 1,
+        "fathers": 1,
+        "monster": 1,
+        "tales": 1
+    },
+    "154_THE_RAT_AND_THE_ELEPHANT": {
+        "Rat": 5,
+        "Elephant": 3,
+        "Cat": 2,
+        "Dog": 1,
+        "Parrots": 1,
+        "Monkey": 1
+    },
+    "189_THE_FISH_AND_THE_SHEPHERD_WHO_PLAYED_ON_THE_CLARIONET": {
+        "Tircis": 5,
+        "Annette": 4,
+        "fishes": 4,
+        "trout": 1,
+        "greyling": 1,
+        "bream": 1
+    },
+    "19_THE_PULLET_AND_THE_PEARL": {
+        "Fowl": 1
+    },
+    "210_THE_TWO_GOATS": {
+        "Goat": 6
+    },
+    "22_AGAINST_THOSE_WHO_ARE_HARD_TO_PLEASE": {
+        "Wolf": 1,
+        "Lamb": 1,
+        "Ravens": 1,
+        "Reynard": 1,
+        "Amaryllis": 1,
+        "Alcippus": 1,
+        "Tircis": 1,
+        "Dog": 1,
+        "Sheep": 1
+    },
+    "80_THE_ANIMALS_SENDING_A_TRIBUTE_TO_ALEXANDER": {
+        "Alexander": 1,
+        "Monkey": 2,
+        "Mule": 1,
+        "Ass": 1,
+        "Horse": 1,
+        "Camel": 1,
+        "Lion": 3,
+        "Sheep": 1
+    },
+    "224_THE_FOX_THE_FLIES_AND_THE_HEDGEHOG": {
+        "Fox": 5,
+        "Fly": 2,
+        "Hedgehog": 1,
+        "Reynard": 1
+    },
+    "35_THE_BAT_AND_THE_TWO_WEASELS": {
+        "Bat": 4,
+        "Weasel": 3
+    },
+    "221_THE_WOLF_AND_THE_FOX": {
+        "Fox": 5,
+        "Wolf": 4,
+        "sheep": 3,
+        "dogs": 1,
+        "chanticleer": 1
+    },
+    "43_THE_RAVEN_WHO_WISHED_TO_IMITATE_THE_EAGLE": {
+        "Bird of Jove": 1,
+        "Raven": 5,
+        "Sheep": 3,
+        "Shepherd": 1
+    },
+    "36_THE_BIRD_WOUNDED_BY_AN_ARROW": {
+        "bird": 1
+    },
+    "95_THE_HEN_WITH_THE_GOLDEN_EGGS": {
+        "Hen": 3
+    },
+    "115_THE_ASS_AND_HIS_MASTERS": {
+        "Donkey": 3,
+        "Gardener": 3,
+        "Tanner": 1,
+        "Charcoal-dealer": 1,
+        "Fate": 4,
+        "Jupiter": 1
+    },
+    "181_NOT_TOO_MUCH": {
+        "Sheep": 3,
+        "Wolf": 3,
+        "Man": 6
+    },
+    "213_THE_SICK_STAG": {
+        "Stag": 4,
+        "Friends": 4
+    },
+    "212_THE_WOLF_AND_THE_FOX": {
+        "Fox": 6,
+        "Wolf": 4
+    },
+    "182_THE_TWO_RATS_THE_FOX_AND_THE_EGG": {
+        "Iris": 8,
+        "ass": 1,
+        "stag": 1,
+        "dogs": 2,
+        "partridge": 1,
+        "pointer": 1,
+        "beavers": 2,
+        "fox": 2,
+        "Rats": 2
+    },
+    "199_THE_DOG_WHOSE_EARS_WERE_CUT": {
+        "Dog": 5,
+        "kings of animals": 1,
+        "mastiffs": 1,
+        "rough dogs": 1
+    },
+    "159_THE_TWO_DOGS_AND_THE_DEAD_ASS": {
+        "Dog": 2,
+        "Mastiff": 2,
+        "Donkey": 1,
+        "Ass": 2
+    },
+    "29_THE_LION_AND_THE_RAT": {
+        "Rat": 4,
+        "Lion": 3
+    },
+    "122_THE_YOUNG_WIDOW": {
+        "Husband": 4,
+        "Widow": 6,
+        "father": 3,
+        "Cupids": 1
+    },
+    "236_THE_FROGS_AND_THE_SUN": {
+        "Frog": 5,
+        "star-king": 1,
+        "sun": 3,
+        "Fortune": 1
+    },
+    "116_THE_SUN_AND_THE_FROGS": {
+        "Sun": 3,
+        "Frogs": 4
+    },
+    "5_THE_WOLF_AND_THE_DOG": {
+        "Wolf": 6,
+        "Mastiff": 4,
+        "Dog": 2
+    },
+    "214_THE_CAT_AND_THE_TWO_SPARROWS": {
+        "Sparrow": 4,
+        "Cat": 5
+    },
+    "160_THE_ADVANTAGE_OF_BEING_CLEVER": {
+        "rich man": 4,
+        "poor man": 5,
+        "wise man": 4,
+        "fool": 3,
+        "citizen": 2,
+        "artisan": 1,
+        "tradesman": 1,
+        "courtesan": 1
+    },
+    "69_THE_FLY_AND_THE_ANT": {
+        "Fly": 6,
+        "Ant": 6,
+        "Jupiter": 1,
+        "King Phœbus": 1
+    },
+    "184_THE_HUSBAND_THE_WIFE_AND_THE_ROBBER": {
+        "Husband": 5,
+        "Wife": 5,
+        "Robber": 3,
+        "bird": 1
+    },
+    "179_THE_WOLF_AND_THE_STARVED_DOG": {
+        "Carp": 1,
+        "fisherman": 1,
+        "Wolf": 3,
+        "Dog": 2,
+        "mastiff": 1
+    },
+    "123_DISCORD": {
+        "Man": 2,
+        "Discord": 6,
+        "Scandal": 5
+    },
+    "149_TIRCIS_AND_AMARANTH": {
+        "Wolf": 2,
+        "Crow": 2,
+        "Tircis": 5,
+        "Amaranth": 5,
+        "Clidamant": 1
+    },
+    "90_THE_HARES_EARS": {
+        "Lion": 1,
+        "Bulls": 1,
+        "Rams": 1,
+        "Goats": 1,
+        "Deer": 1,
+        "Hare": 2,
+        "Cricket": 2,
+        "Ostrich": 1,
+        "Unicorn": 1
+    },
+    "174_THE_SCHOOLBOY_THE_PEDANT_AND_THE_NURSERY_GARDENER": {
+        "Boy": 3,
+        "Pedant": 3,
+        "Gardener": 1,
+        "Master": 1,
+        "lads": 2
+    },
+    "93_THE_DOCTORS": {
+        "Doctor Much-the-Worse": 2,
+        "Doctor Much-the-Better": 2,
+        "the patient": 2
+    },
+    "195_THE_RABBITS": {
+        "Rabbits": 6,
+        "Dogs": 4
+    },
+    "106_JUPITER_AND_THE_FARMER": {
+        "Jupiter": 3,
+        "Mercury": 1
+    },
+    "114_THE_SICK_LION_AND_THE_FOX": {
+        "Lion": 4,
+        "Fox": 2
+    },
+    "104_PHŒBUS_AND_BOREAS": {
+        "Phœbus": 5,
+        "Boreas": 5,
+        "traveller": 1,
+        "Wind": 1,
+        "Sun": 3,
+        "horseman": 1
+    },
+    "37_THE_MILLER_HIS_SON_AND_THE_ASS": {
+        "Miller": 5,
+        "Son": 5,
+        "Ass": 5,
+        "Horseman": 1,
+        "Merchants": 3,
+        "Girls": 3,
+        "Quidnunc": 1
+    },
+    "143_THE_DOG_WHICH_CARRIED_ROUND_HIS_NECK_HIS_MASTERS_DINNER": {
+        "Dog": 5,
+        "Mastiff": 1,
+        "Rabbit": 1
+    },
+    "20_THE_DRONES_AND_THE_BEES": {
+        "Bees": 5,
+        "Drones": 5,
+        "Wasp": 4,
+        "Ants": 1
+    },
+    "6_THE_HEIFER_THE_SHEGOAT_AND_THE_LAMB_IN": {
+        "Heifer": 1,
+        "Lamb": 1,
+        "Nanny-goat": 1,
+        "Lion": 3,
+        "Goat": 1,
+        "Stag": 1
+    },
+    "209_THE_DREAM_OF_AN_INHABITANT_OF_MOGUL": {},
+    "235_THE_MADMAN_AND_THE_PHILOSOPHER": {},
+    "110_THE_MULE_THAT_BOASTED_OF_HIS_FAMILY": {
+        "Mule": 4,
+        "Mare": 1,
+        "Donkey": 1
+    },
+    "164_THE_TWO_PIGEONS": {
+        "Pigeon": 5,
+        "Crow": 1,
+        "Falcon": 1,
+        "Hawk": 1,
+        "Eagle": 1,
+        "Boy": 1
+    },
+    "169_THE_OYSTER_AND_ITS_CLAIMANTS": {
+        "Traveller": 2,
+        "Oyster": 1,
+        "Lawyer": 2
+    },
+    "101_THE_EAGLE_AND_THE_OWL": {
+        "Eagle": 6,
+        "Owl": 9
+    },
+    "198_THE_LION": {
+        "Leopard": 3,
+        "Lion": 3,
+        "Fox": 4,
+        "Steer": 1,
+        "Stag": 1,
+        "Sheep": 2,
+        "Orphan": 1,
+        "Master Lion": 1,
+        "Vigilance": 1,
+        "Fortitude": 1,
+        "Strength": 1
+    },
+    "170_THE_FRAUDULENT_TRUSTEE": {
+        "dogs": 1,
+        "wolves": 1,
+        "brutes": 1,
+        "merchant": 3,
+        "rat": 2,
+        "child": 2,
+        "owl": 2,
+        "father": 1,
+        "travellers": 2,
+        "story-teller": 1,
+        "friend": 2,
+        "cabbage": 2,
+        "wag": 1,
+        "man": 5,
+        "Fraudulent Trustee": 2
+    },
+    "7_THE_WALLET": {
+        "Monkey": 4,
+        "Bear": 3,
+        "Elephant": 2,
+        "Whale": 1,
+        "Ant": 1,
+        "Gnat": 1,
+        "Lynx": 1,
+        "Mole": 1
+    },
+    "135_THE_COACH_AND_THE_FLY": {
+        "Horse": 6,
+        "Fly": 5,
+        "Monk": 2,
+        "Woman": 1
+    },
+    "232_A_SCYTHIAN_PHILOSOPHER": {},
+    "125_THE_RAT_WHO_RETIRED_FROM_THE_WORLD": {
+        "Rat": 6,
+        "hermit": 3,
+        "deputy": 1,
+        "ambassadors": 1
+    },
+    "118_THE_DOG_AND_THE_SHADOW": {
+        "Dog": 3
+    },
+    "41_THE_FOX_AND__THE_GRAPES": {
+        "Fox": 3,
+        "Grapes": 3
+    },
+    "96_THE_ASS_THAT_CARRIED_THE_RELICS": {
+        "Ass": 2
+    },
+    "201_THE_PEASANT_OF_THE_DANUBE": {
+        "Mouse": 1,
+        "Boor": 2,
+        "Grizzly Bear": 1,
+        "Peasant": 2,
+        "Wolves": 1,
+        "Bears": 1,
+        "Romana": 4,
+        "Germans": 2
+    },
+    "102_THE_SHEPHERD_AND_THE_LION": {
+        "Shepherd": 3,
+        "Hunter": 1,
+        "Wolves": 1,
+        "Lion": 2,
+        "Calf": 2,
+        "Ox": 1
+    },
+    "148_THE_WOMAN_AND_THE_SECRET": {
+        "husband": 3,
+        "wife": 3,
+        "gossip": 3,
+        "hen": 2,
+        "chickens": 1
+    },
+    "18_THE_CHILD_AND_THE_SCHOOLMASTER": {},
+    "91_THE_FOX_WITH_HIS_TAIL_CUT_OFF": {
+        "Fox": 6,
+        "Geese": 1,
+        "Rabbits": 1
+    },
+    "188_THE_KITE_AND_THE_NIGHTINGALE": {
+        "Kite": 5,
+        "Nightingale": 2,
+        "Tyreus": 2
+    },
+    "208_THE_FARMER_THE_DOG_AND_THE_FOX": {
+        "Wolf": 1,
+        "Fox": 5,
+        "Farmer": 3,
+        "Dog": 2,
+        "Cocks": 1,
+        "Chickens": 1,
+        "Hens": 2
+    },
+    "78_THE_FROG_AND_THE_RAT": {
+        "Rat": 5,
+        "Frog": 5,
+        "Kite": 2
+    },
+    "223_THE_FOREST_AND_THE_WOODMAN": {
+        "Woodman": 6,
+        "Forest": 4
+    },
+    "230_THE_FOX_THE_WOLF_AND_THE_HORSE": {
+        "Fox": 6,
+        "Horse": 5,
+        "Wolf": 5
+    },
+    "79_THE_OLD_WOMAN_AND_HER_SERVANTS": {
+        "Beldam": 1,
+        "maid": 2,
+        "Cock": 2,
+        "Chanticleer": 1
+    },
+    "136_THE_INGRATITUDE_AND_INJUSTICE_OF_MEN_TOWARDS_FORTUNE": {},
+    "83_THE_HORSE_AND_THE_WOLF": {
+        "Wolf": 5,
+        "Horse": 3
+    },
+    "31_THE_ASTROLOGER_WHO_LET_HIMSELF_FALL_INTO_THE_WELL": {},
+    "105_THE_BEAR_AND_THE_TWO_FRIENDS": {
+        "Bear": 5,
+        "Friends": 2,
+        "Merchant": 2
+    },
+    "186_THE_TWO_MEN_AND_THE_TREASURE": {},
+    "132_THE_CURATE_AND_THE_CORPSE": {
+        "Curé": 5,
+        "Dead man": 3,
+        "Paquette": 1
+    },
+    "45_THE_CAT_CHANGED_INTO_A_WOMAN": {
+        "Man": 4,
+        "Cat": 5,
+        "Woman": 5,
+        "Mice": 2
+    },
+    "163_THE_FALCON_AND_THE_CAPON": {
+        "Capon": 5,
+        "Falcon": 4,
+        "Fowl": 2
+    },
+    "77_THE_CAMEL_AND_THE_DRIFTWOOD": {
+        "Camel": 1
+    },
+    "151_THE_RAT_AND_THE_OYSTER": {
+        "Rat": 6,
+        "Oyster": 3,
+        "Tethys": 1
+    },
+    "192_THE_TWO_ADVENTURERS_AND_THE_TALISMAN": {
+        "Knight": 6,
+        "Elephant": 2
+    },
+    "56_THE_EAGLE_THE_WILD_SOW_AND_THE_CAT": {
+        "Eagle": 5,
+        "Sow": 5,
+        "Cat": 4
+    },
+    "44_THE_WOLVES_AND_THE_SHEEP": {
+        "Wolves": 7,
+        "Sheep": 5,
+        "Wolf-cubs": 2,
+        "lambs": 2,
+        "shepherds": 3,
+        "dogs": 2
+    },
+    "54_KING_GASTER_AND_THE_MEMBERS": {
+        "Belly": 1,
+        "Gaster": 3,
+        "heart": 1
+    },
+    "58_THE_GOUT_AND_THE_SPIDER": {
+        "Spider": 6,
+        "Gout": 5
+    },
+    "2_THE_RAVEN_AND_THE_FOX": {
+        "Raven": 5,
+        "Reynard": 1,
+        "Fox": 2
+    },
+    "92_THE_SATYR_AND_THE_PASSERBY": {
+        "Satyr": 4,
+        "Traveller": 3
+    },
+    "206_THE_OWL_AND_THE_MICE": {
+        "Owl": 7,
+        "Mice": 5
+    },
+    "161_THE_WOLF_AND_THE_HUNTER": {
+        "Avarice": 1,
+        "Man": 1,
+        "Hunter": 3,
+        "Stag": 1,
+        "Doe": 1,
+        "Boar": 3,
+        "Wolf": 3,
+        "Partridge": 1
+    },
+    "86_THE_ORACLE_AND_THE_IMPIOUS_MAN": {
+        "Sparrow": 1
+    },
+    "229_THE_APE": {
+        "Ape": 4,
+        "wife": 2,
+        "soul": 1,
+        "infant": 1,
+        "father": 1,
+        "loves": 1,
+        "monkey": 1
+    },
+    "203_THE_MERCHANT_THE_NOBLEMAN_THE_SHEPHERD_AND_THE_KINGS_SON": {
+        "Merchant": 4,
+        "Shepherd": 5,
+        "Lord": 2,
+        "King's Son": 3,
+        "Prince": 3,
+        "Noble": 1
+    },
+    "8_THE_SWALLOW_AND_THE_LITTLE_BIRDS": {
+        "Swallow": 5,
+        "Birds": 5,
+        "little birds": 2
+    },
+    "147_THE_MAN_AND_THE_FLEA": {
+        "Hercules": 2,
+        "Jupiter": 1,
+        "Flea": 2
+    },
+    "133_THE_MAN_WHO_RUNS_AFTER_FORTUNE_AND_THE_MAN_WHO_WAITS_FOR_HER": {
+        "Fortune": 8,
+        "man": 5,
+        "friend": 3
+    },
+    "211_THE_LION_THE_APE_AND_THE_TWO_ASSES": {
+        "Lion": 3,
+        "Ape": 6,
+        "Asses": 2,
+        "Monkey": 2
+    },
+    "62_THE_SWAN_AND_THE_COOK": {
+        "Swan": 4,
+        "Goose": 2,
+        "Cook": 3
+    },
+    "48_THE_CAT_AND_THE_OLD_RAT": {
+        "Cat": 5,
+        "Rat": 5,
+        "Mice": 2
+    },
+    "187_THE_SHEPHERD_AND_HIS_FLOCK": {
+        "wolf": 5,
+        "sheep": 4,
+        "Bob": 3,
+        "Bobby": 1,
+        "ram": 1,
+        "lamb": 1
+    },
+    "97_THE_SERPENT_AND_THE_FILE": {
+        "Serpent": 1,
+        "Watchmaker": 1,
+        "Tool": 1
+    },
+    "42_THE_EAGLE_AND_THE_BEETLE": {
+        "John Rabbit": 6,
+        "Eagle": 8,
+        "Beetle": 6,
+        "Jupiter": 2
+    },
+    "216_THE_OLD_CAT_AND_THE_YOUNG_MOUSE": {
+        "Mouse": 6,
+        "Cat": 6
+    },
+    "234_THE_ELEPHANT_AND_JUPITERS_MONKEY": {
+        "Elephant": 7,
+        "Rhinoceros": 4,
+        "Monkey": 3,
+        "Giles": 3,
+        "Jupiter": 2
+    },
+    "75_THE_LITTLE_FISH_AND_THE_FISHERMAN": {
+        "Fish": 3,
+        "Carp": 2,
+        "Angler": 4
+    },
+    "72_THE_ASS_AND_THE_LITTLE_DOG": {
+        "Ass": 3,
+        "master": 4,
+        "Martin": 2,
+        "creature": 1,
+        "donkey": 2
+    },
+    "3_THE_FROG_THAT_WISHED_TO_MAKE_HERSELF_AS_BIG_AS_THE_OX": {
+        "Frog": 5,
+        "Ox": 3,
+        "Bull": 2
+    },
+    "112_THE_COUNTRYMAN_AND_THE_SERPENT": {
+        "Peasant": 1,
+        "snake": 3
+    },
+    "82_THE_FOX_AND_THE_BUST": {
+        "Ass": 1,
+        "Fox": 2,
+        "Reynard": 1,
+        "Hero": 1
+    },
+    "14_DEATH_AND_THE_WOODCUTTER": {
+        "Woodcutter": 4,
+        "Death": 3
+    },
+    "180_THE_WAX_CANDLE": {
+        "Bees": 2,
+        "Wax Taper": 3,
+        "Candles": 1,
+        "Empedocles": 2
+    },
+    "113_THE_HARE_AND_THE_TORTOISE": {
+        "Tortoise": 5,
+        "Hare": 6
+    },
+    "153_THE_PIG_THE_GOAT_AND_THE_SHEEP": {
+        "Goat": 1,
+        "Sheep": 2,
+        "Pig": 2
+    },
+    "11_THE_DRAGON_WITH_MANY_HEADS_AND_THE_DRAGON": {
+        "Hydra": 1,
+        "Dragon": 1
+    },
+    "51_THE_FOX_AND_THE_GOAT": {
+        "Fox": 4,
+        "Goat": 3
+    },
+    "26_THE_FOX_AND_THE_STORK": {
+        "Fox": 5,
+        "Stork": 5,
+        "Reynard": 4
+    },
+    "100_THE_ASS_IN_THE_LIONS_SKIN": {
+        "Donkey": 4,
+        "Lion": 4,
+        "Hodge": 1
+    },
+    "47_THE_LION_AND_THE_ASS": {
+        "Lion": 5,
+        "Ass": 5
+    },
+    "233_DAPHNIS_AND_ALCIMADURA": {
+        "Daphnis": 7,
+        "Alcimadura": 5,
+        "Cupid": 3,
+        "Fates": 1
+    },
+    "226_THE_FOX_AND_THE_TURKEYS": {
+        "Fox": 5,
+        "Turkeys": 5
+    },
+    "196_THE_SWALLOW_AND_THE_SPIDER": {
+        "Spider": 5,
+        "Progne": 1,
+        "Philomel": 1,
+        "Swallow": 2,
+        "Jupiter": 3,
+        "Jove": 1
+    },
+    "65_THE_LION_GROWN_OLD": {
+        "Lion": 3,
+        "Horse": 1,
+        "Wolf": 1,
+        "Ox": 1,
+        "Ass": 1
+    },
+    "55_THE_MONKEY_AND_THE_DOLPHIN": {
+        "Monkey": 4,
+        "Dolphin": 5
+    },
+    "218_THE_EAGLE_AND_THE_MAGPIE": {
+        "Eagle": 5,
+        "Pie": 4,
+        "Magpie": 2
+    },
+    "46_PHILOMEL_AND_PROGNE": {
+        "Progne": 6,
+        "Philomel": 5,
+        "King Tereus": 1
+    },
+    "66_THE_DROWNED_WOMAN": {},
+    "121_THE_CHARLATAN": {
+        "Ass": 7
+    },
+    "177_THE_MOUSE_METAMORPHOSED_INTO_A_GIRL": {
+        "Mouse": 6,
+        "Brahmin": 6,
+        "Sun": 5,
+        "Cloud": 2,
+        "North Wind": 1,
+        "Breeze": 1,
+        "Hill": 1,
+        "Rat": 3,
+        "Maid": 3,
+        "Cat": 1,
+        "Dog": 1,
+        "Bear": 1
+    },
+    "128_THE_MAIDEN": {
+        "Maiden": 6,
+        "Belle": 1,
+        "Heaven": 1,
+        "Time": 1
+    },
+    "50_THE_LION_IN_LOVE": {
+        "Lion": 5,
+        "shepherdess": 1,
+        "father": 3,
+        "mastiff": 1
+    },
+    "126_THE_HERON": {
+        "Heron": 5,
+        "Carp": 1,
+        "Pike": 1,
+        "Tench": 3,
+        "Gudgeon": 1,
+        "Snail": 1
+    },
+    "220_LOVE_AND_FOLLY": {
+        "Cupid": 5,
+        "Folly": 5,
+        "Venus": 1,
+        "Jove": 1,
+        "Nemesis": 1
+    },
+    "215_THE_MISER_AND_THE_APE": {
+        "Man": 1,
+        "Miser": 4,
+        "Ape": 3,
+        "Monkey": 1
+    },
+    "140_THE_CAT_THE_WEASEL_AND_THE_LITTLE_RABBIT": {
+        "Rabbit": 5,
+        "Weasel": 4,
+        "Cat": 2
+    },
+    "60_THE_WOLF_AND_THE_STORK": {
+        "Wolf": 5,
+        "Stork": 2
+    },
+    "33_THE_TWO_BULLS_AND_THE_FROG": {
+        "Bulls": 2,
+        "Frog": 1,
+        "croaker": 2,
+        "heifer": 1
+    },
+    "71_THE_WOODMAN_AND_MERCURY": {
+        "Jupiter": 5,
+        "Mercury": 6,
+        "Woodman": 4
+    },
+    "4_THE_TWO_MULES": {
+        "Mule": 3
+    },
+    "73_MAN_AND_THE_WOODEN_IDOL": {},
+    "21_THE_OAK_AND_THE_REED": {
+        "Oak": 5,
+        "Reed": 6,
+        "Wren": 1,
+        "Wind": 3
+    },
+    "171_JUPITER_AND_THE_TRAVELLER": {
+        "Jove": 4,
+        "Passenger": 1,
+        "oxen": 1,
+        "elephants": 1,
+        "Jupiter": 1,
+        "robbers": 1,
+        "Pluto": 1
+    },
+    "237_THE_ARBITRATOR_ALMONER_AND_HERMIT": {},
+    "157_THE_TORRENT_AND_THE_RIVER": {
+        "Torrent": 5,
+        "Traveller": 4,
+        "Thieves": 3
+    },
+    "137_AN_ANIMAL_IN_THE_MOON": {
+        "elephant": 1,
+        "ox": 1,
+        "mouse": 1
+    },
+    "64_THE_WOLF_THE_MOTHER_AND_THE_CHILD": {
+        "Wolf": 6,
+        "Mother": 5,
+        "Child": 3,
+        "Peasant": 1,
+        "Mastiff": 1
+    },
+    "63_THE_WOLF_THE_GOAT_AND_THE_KID": {
+        "She-Goat": 1,
+        "Kid": 4,
+        "Wolf": 5
+    },
+    "99_THE_LION_GOING_TO_WAR": {
+        "Lion": 3,
+        "Elephant": 1,
+        "Bear": 1,
+        "Fox": 2,
+        "Monkey": 1,
+        "Ass": 2,
+        "Hare": 2
+    },
+    "68_THE_LARK_AND_HER_LITTLE_ONES_WITH_THE_OWNER_OF_A_FIELD": {
+        "Lark": 6,
+        "owner": 3,
+        "son": 3,
+        "farmer": 1,
+        "mother": 3,
+        "children": 2,
+        "covey": 1
+    },
+    "103_THE_LION_AND_THE_HUNTER": {
+        "Braggart": 1,
+        "Dog": 1,
+        "Lion": 3,
+        "Shepherd": 1,
+        "Sheep": 1,
+        "Jupiter": 1
+    },
+    "49_A_WILL_INTERPRETED_BY_ÆSOP": {
+        "Æsop": 4,
+        "daughters": 3,
+        "mother": 3,
+        "father": 3,
+        "judge": 2,
+        "sisters": 2,
+        "man": 2
+    },
+    "146_THE_BEAR_AND_THE_AMATEUR_OF_GARDENING": {
+        "Bear": 6,
+        "Man": 5
+    },
+    "202_THE_LIONESS_AND_SHEBEAR": {
+        "Lion": 3,
+        "She-Bear": 2,
+        "hunter": 1,
+        "birds": 1,
+        "Mother": 1,
+        "beast": 2,
+        "gods": 1,
+        "Hecuba": 1
+    },
+    "227_THE_CROW_THE_GAZELLE_THE_TORTOISE_AND_THE_RAT": {
+        "Iris": 5,
+        "Rat": 7,
+        "Gazelle": 6,
+        "Tortoise": 5,
+        "Crow": 5,
+        "Dog": 1,
+        "Hunter": 3,
+        "Deer": 1
+    },
+    "222_THE_CRAB_AND_ITS_DAUGHTER": {
+        "Mother Crab": 2,
+        "Daughter Crab": 2
+    },
+    "231_THE_LEAGUE_OF_THE_RATS": {
+        "Mouse": 5,
+        "Cat": 5,
+        "Rat": 4
+    },
+    "107_THE_STAG_VIEWING_HIMSELF_IN_THE_STREAM": {
+        "Stag": 5,
+        "deer-hound": 1,
+        "creature": 1
+    },
+    "144_DEATH_AND_THE_DYING_MAN": {
+        "Death": 10
+    },
+    "111_THE_OLD_MAN_AND_THE_ASS": {
+        "Old Man": 4,
+        "Donkey": 2,
+        "Ass": 1,
+        "beast": 1
+    },
+    "39_THE_FROGS_WHO_ASKED_FOR_A_KING": {
+        "Frogs": 6,
+        "Jove": 1,
+        "King": 2,
+        "Log": 1,
+        "Crane": 1,
+        "Jupiter": 2
+    },
+    "16_DEATH_AND_THE_UNHAPPY_MAN": {
+        "Death": 5,
+        "Miserable Man": 2
+    },
+    "225_THE_HAWK_THE_KING_AND_THE_FALCON": {
+        "Hawk": 3,
+        "King": 5,
+        "bird": 6,
+        "courtiers": 4,
+        "woodman": 2,
+        "monarch": 2
+    },
+    "205_THE_GODS_AS_INSTRUCTORS_OF_JUPITERS_SON": {
+        "Jupiter": 5,
+        "Flora": 1,
+        "Mars": 1,
+        "Apollo": 1,
+        "Hercules": 1,
+        "Cupid": 1
+    },
+    "190_THE_MAN_AND_THE_SNAKE": {
+        "Man": 9,
+        "Snake": 5,
+        "Serpent": 2,
+        "Cow": 1,
+        "Ox": 1,
+        "Oak-tree": 1
+    },
+    "172_THE_APE_AND_THE_LEOPARD": {
+        "Ape": 7,
+        "Leopard": 6
+    },
+    "87_THE_MOUNTAIN_IN_LABOUR": {
+        "Mouse": 2
+    },
+    "194_THE_WOLF_AND_THE_PEASANTS": {
+        "Wolf": 8,
+        "shepherds": 3,
+        "sheep": 2,
+        "lamb": 2,
+        "lambkin": 2,
+        "dogs": 1,
+        "hunters": 1,
+        "peasants": 1,
+        "sheep-dogs": 1,
+        "mother": 2,
+        "father": 1
+    },
+    "17_THE_WOLF_TURNED_SHEPHERD": {
+        "Wolf": 5,
+        "Fox": 1,
+        "Shepherd": 3,
+        "Dog": 2,
+        "Sheep": 3
+    },
+    "38_THE_COCK_AND_THE_FOX": {
+        "Bird": 1,
+        "Fox": 3,
+        "Cock": 3,
+        "Greyhounds": 2
+    },
+    "138_THE_FORTUNETELLER": {},
+    "15_SIMONIDES_RESCUED_BY_THE_GODS": {
+        "The Gods": 5,
+        "The King": 1,
+        "Castor": 4,
+        "Pollux": 4,
+        "Simonides": 4,
+        "The Athlete": 4,
+        "Melpomene": 2,
+        "Fame": 2
+    },
+    "40_THE_DOG_AND_HER_COMPANION": {
+        "Dog": 5
+    },
+    "13_THE_ROBBERS_AND_THE_ASS": {
+        "Thief": 3,
+        "Donkey": 2,
+        "Ass": 3
+    },
+    "30_THE_DOVE_AND_THE_ANT": {
+        "Dove": 4,
+        "Ant": 3,
+        "Poacher": 2
+    },
+    "67_THE_WEASEL_IN_THE_GRANARY": {
+        "Madame Weasel": 5,
+        "Rat": 1
+    },
+    "59_THE_EYE_OR_THE_MASTER": {
+        "Stag": 5,
+        "Oxen": 5,
+        "Bullock": 1,
+        "Master": 1
+    },
+    "168_DEMOCRITUS_AND_THE_ABDERANIANS": {}
+}

@@ -4,27 +4,12 @@ import { OrbitControls, Html, Line } from "@react-three/drei";
 import * as THREE from "three";
 
 const distinctColors = [
-  "#FF0000", // Red
-  "#00FF00", // Green
-  "#FFC0CB", // Blue
-  "#FFFF00", // Yellow
-  "#FF00FF", // Magenta
-  "#00FFFF", // Cyan
-  "#FFA500", // Orange
-  "#800080", // Purple
-  "#808000", // Olive
-  "#008080", // Teal
-  "#000000", // Black
-  "#808080", // Gray
-  "#C71585", // Medium Violet Red
-  "#4682B4", // Steel Blue
-  "#A52A2A", // Brown
+  "#FF0000", "#00FF00", "#FFC0CB", "#FFFF00", "#FF00FF",
+  "#00FFFF", "#FFA500", "#800080", "#808000", "#008080",
+  "#000000", "#808080", "#C71585", "#4682B4", "#A52A2A",
 ];
 
-const getDistinctColor = (index: number): string => {
-  return distinctColors[index % distinctColors.length];
-};
-
+const getDistinctColor = (index: number): string => distinctColors[index % distinctColors.length];
 const getRandomPosition = (): [number, number, number] => [
   Math.random() * 20 - 10,
   Math.random() * 20 - 10,
@@ -36,10 +21,7 @@ interface RotatingGroupProps {
   children: React.ReactNode;
 }
 
-const RotatingGroup: React.FC<RotatingGroupProps> = ({
-  isInteracting,
-  children,
-}) => {
+const RotatingGroup: React.FC<RotatingGroupProps> = ({ isInteracting, children }) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -100,14 +82,44 @@ const Network: React.FC<NetworkProps> = ({ data }) => {
       return null;
     }
 
-    return Object.values(data).reduce((intersection, fables, index) => {
-      const animal = Object.keys(data)[index];
-      if (selectedAnimals.includes(animal)) {
-        return intersection.filter((fable) => fables.includes(fable));
-      }
-      return intersection;
-    }, Object.values(data)[0] || []);
+    // Get the list of fables for each selected animal
+    const fablesLists = selectedAnimals.map((animal) => data[animal]);
+
+    // Compute the intersection of all fable lists
+    const intersection = fablesLists.reduce((commonFables, currentFables) => {
+      return commonFables.filter((fable) => currentFables.includes(fable));
+    }, fablesLists[0] || []);
+
+    return intersection;
   }, [visibleAnimals, intersectionMode, data]);
+
+  const networkStats = useMemo(() => {
+    const totalAnimals = Object.keys(data).length;
+    const totalFables = new Set(Object.values(data).flat()).size;
+
+    const totalLinks = Object.values(data).reduce(
+      (sum, fables) => sum + fables.length,
+      0
+    );
+
+    const nodeDegrees = Object.keys(data).reduce((acc, animal) => {
+      acc[animal] = data[animal].length;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const averageDegree = totalLinks / totalAnimals;
+
+    const density = totalLinks / (totalAnimals * totalFables);
+
+    return {
+      totalAnimals,
+      totalFables,
+      totalLinks,
+      nodeDegrees,
+      averageDegree,
+      density,
+    };
+  }, [data]);
 
   return (
     <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
@@ -129,10 +141,17 @@ const Network: React.FC<NetworkProps> = ({ data }) => {
                 checked={visibleAnimals[animal]}
                 onChange={() => toggleAnimalVisibility(animal)}
               />
-              {animal}
+              {animal} ({networkStats.nodeDegrees[animal]} fables)
             </label>
           </div>
         ))}
+        <hr />
+        <h4>Network Statistics</h4>
+        <p>Total Animals: {networkStats.totalAnimals}</p>
+        <p>Total Fables: {networkStats.totalFables}</p>
+        <p>Total Links: {networkStats.totalLinks}</p>
+        <p>Average Degree: {networkStats.averageDegree.toFixed(2)}</p>
+        <p>Density: {networkStats.density.toFixed(4)}</p>
         <hr />
         <label>
           <input

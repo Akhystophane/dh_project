@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/dh_project/', // Ton chemin de base pour GitHub Pages
+  base: '/', // Changed from '/dh_project/' for local Flask serving
   build: {
     outDir: '../docs', // Dossier de sortie à la racine du projet
   },

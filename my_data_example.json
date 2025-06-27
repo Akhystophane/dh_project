@@ -1,0 +1,118 @@
+{
+  "title": "My Research Project",
+  "description": "A study of medieval manuscripts",
+  "data": {
+    "nodes": [
+      {
+        "id": 1,
+        "label": "Beowulf Manuscript",
+        "type": "manuscript",
+        "properties": {
+          "title": "Beowulf",
+          "date": "1000 CE",
+          "location": "British Library",
+          "language": "Old English"
+        }
+      },
+      {
+        "id": 2,
+        "label": "King Hrothgar",
+        "type": "character",
+        "properties": {
+          "name": "Hrothgar",
+          "role": "King of the Danes",
+          "description": "Wise and generous ruler"
+        }
+      },
+      {
+        "id": 3,
+        "label": "Beowulf",
+        "type": "character",
+        "properties": {
+          "name": "Beowulf",
+          "role": "Hero",
+          "origin": "Geatland",
+          "description": "Mighty warrior"
+        }
+      },
+      {
+        "id": 4,
+        "label": "Grendel",
+        "type": "monster",
+        "properties": {
+          "name": "Grendel",
+          "description": "Fearsome monster",
+          "habitat": "Swamp"
+        }
+      },
+      {
+        "id": 5,
+        "label": "Heorot Hall",
+        "type": "place",
+        "properties": {
+          "name": "Heorot",
+          "description": "Great mead hall",
+          "location": "Denmark"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": 2,
+        "target": 5,
+        "label": "rules",
+        "properties": {
+          "relationship": "King of the hall"
+        }
+      },
+      {
+        "source": 3,
+        "target": 4,
+        "label": "fights",
+        "properties": {
+          "outcome": "Beowulf wins",
+          "method": "Hand-to-hand combat"
+        }
+      },
+      {
+        "source": 4,
+        "target": 5,
+        "label": "attacks",
+        "properties": {
+          "frequency": "Nightly",
+          "duration": "12 years"
+        }
+      },
+      {
+        "source": 3,
+        "target": 2,
+        "label": "helps",
+        "properties": {
+          "reason": "To defeat Grendel",
+          "reward": "Treasure and honor"
+        }
+      }
+    ],
+    "metadata": {
+      "project_name": "Beowulf Analysis",
+      "author": "Student Name",
+      "course": "Medieval Literature",
+      "date": "2024",
+      "description": "Network analysis of characters and relationships in Beowulf"
+    }
+  },
+  "settings": {
+    "theme": "medieval",
+    "auto_rebuild": true,
+    "visualization": {
+      "node_size": 25,
+      "edge_width": 3,
+      "colors": {
+        "manuscript": "#8B4513",
+        "character": "#4169E1",
+        "monster": "#DC143C",
+        "place": "#228B22"
+      }
+    }
+  }
+} 

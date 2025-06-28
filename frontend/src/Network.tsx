@@ -321,10 +321,29 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
 
   // Handle hover events with detailed information
   const handleNodeHover = (nodeName: string, nodeType: 'essay' | 'person') => {
-    setHoveredNodeDetails({
-      name: nodeName,
-      type: nodeType,
-    });
+    if (nodeType === 'essay') {
+      const bookNumber = getBookNumber(nodeName);
+      const personCount = data[nodeName]?.length || 0;
+      setHoveredNodeDetails({
+        name: nodeName,
+        type: 'Essay',
+        book: `Book ${bookNumber}`,
+        personCount: personCount,
+        persons: data[nodeName] || []
+      });
+    } else {
+      // Find which essays mention this person
+      const connectedEssays = Object.entries(data)
+        .filter(([, persons]) => persons.includes(nodeName))
+        .map(([essay]) => essay);
+      
+      setHoveredNodeDetails({
+        name: nodeName,
+        type: 'Person',
+        mentionedIn: connectedEssays.length,
+        essays: connectedEssays
+      });
+    }
   };
 
   const handleNodeLeave = () => {
@@ -357,6 +376,57 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
           <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
             Type: {hoveredNodeDetails.type}
           </p>
+          {hoveredNodeDetails.type === 'Essay' && (
+            <>
+              <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+                Book: {hoveredNodeDetails.book}
+              </p>
+              <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+                Persons: {hoveredNodeDetails.personCount}
+              </p>
+              {hoveredNodeDetails.persons && hoveredNodeDetails.persons.length > 0 && (
+                <div style={{ marginTop: '10px' }}>
+                  <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+                    Persons:
+                  </p>
+                  <div style={{ maxHeight: '100px', overflowY: 'auto', fontSize: '11px' }}>
+                    {hoveredNodeDetails.persons.slice(0, 10).map((person: string, index: number) => (
+                      <div key={index} style={{ margin: '2px 0' }}>• {person}</div>
+                    ))}
+                    {hoveredNodeDetails.persons.length > 10 && (
+                      <div style={{ color: '#95a5a6', fontStyle: 'italic' }}>
+                        ... and {hoveredNodeDetails.persons.length - 10} more
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          {hoveredNodeDetails.type === 'Person' && (
+            <>
+              <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+                Mentioned in: {hoveredNodeDetails.mentionedIn} essays
+              </p>
+              {hoveredNodeDetails.essays && hoveredNodeDetails.essays.length > 0 && (
+                <div style={{ marginTop: '10px' }}>
+                  <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+                    Essays:
+                  </p>
+                  <div style={{ maxHeight: '100px', overflowY: 'auto', fontSize: '11px' }}>
+                    {hoveredNodeDetails.essays.slice(0, 5).map((essay: string, index: number) => (
+                      <div key={index} style={{ margin: '2px 0' }}>• {essay}</div>
+                    ))}
+                    {hoveredNodeDetails.essays.length > 5 && (
+                      <div style={{ color: '#95a5a6', fontStyle: 'italic' }}>
+                        ... and {hoveredNodeDetails.essays.length - 5} more
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 

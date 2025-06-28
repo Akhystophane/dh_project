@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Html, Line } from "@react-three/drei";
+import { OrbitControls, Line } from "@react-three/drei";
 import * as THREE from "three";
 
 const distinctColors = [
-  "#FF0000", "#00FF00", "#FFC0CB", "#FFFF00", "#FF00FF",
+  "#FF0000", "#00FF00", "#FF1493", "#FFFF00", "#FF00FF",
   "#00FFFF", "#FFA500", "#800080", "#808000", "#008080",
   "#000000", "#808080", "#C71585", "#4682B4", "#A52A2A",
 ];
@@ -15,6 +15,18 @@ const getRandomPosition = (): [number, number, number] => [
   Math.random() * 60 - 30,
   Math.random() * 60 - 30,
 ];
+
+// Function to extract book number from essay name
+const getBookNumber = (essayName: string): number => {
+  // Look for pattern like "essays 03_03 persons" - extract the first number after "essays "
+  const match = essayName.match(/essays (\d{2})_/);
+  return match ? parseInt(match[1]) : 0;
+};
+
+// Function to get book color
+const getBookColor = (bookNumber: number): string => {
+  return distinctColors[bookNumber % distinctColors.length];
+};
 
 interface RotatingGroupProps {
   isInteracting: boolean;
@@ -39,7 +51,8 @@ interface NetworkProps {
 }
 
 const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [hoveredNodeDetails, setHoveredNodeDetails] = useState<any>(null);
+  const [useBookColors, setUseBookColors] = useState(false);
   const [visibleAnimals, setVisibleAnimals] = useState<Record<string, boolean>>(
     () =>
       Object.keys(data).reduce((acc, animal) => {
@@ -49,12 +62,12 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
   );
   const [intersectionMode, setIntersectionMode] = useState(false);
   const [layoutType, setLayoutType] = useState<'random' | 'radial' | 'betweenness' | 'community'>('random');
-  const [isRotating, setIsRotating] = useState(true);
+  const [isRotating, setIsRotating] = useState(false);
 
   // Use metadata for proper labels, fallback to defaults
   const itemTypeLabel = metadata?.node_types?.person || "Person";
-  const totalNodeLabel = metadata?.statistics?.essays ? "Essays" : "Animals";
-  const totalItemLabel = metadata?.statistics?.persons ? "Persons" : "Fables";
+  const totalNodeLabel = "Essays";
+  const totalItemLabel = "Persons";
 
   // Calculate network metrics for positioning
   const networkMetrics = useMemo(() => {
@@ -306,77 +319,277 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
     };
   }, [data]);
 
+  // Handle hover events with detailed information
+  const handleNodeHover = (nodeName: string, nodeType: 'essay' | 'person') => {
+    setHoveredNodeDetails({
+      name: nodeName,
+      type: nodeType,
+    });
+  };
+
+  const handleNodeLeave = () => {
+    setHoveredNodeDetails(null);
+  };
+
   return (
-    <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
+    <div style={{ display: "flex", width: "100vw", height: "100vh", position: "relative" }}>
+      {/* Hover Overlay - Responsive positioning */}
+      {hoveredNodeDetails && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 1000,
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: 'white',
+          padding: '15px',
+          borderRadius: '8px',
+          maxWidth: '300px',
+          maxHeight: 'calc(100vh - 40px)',
+          overflowY: 'auto',
+          fontFamily: 'Georgia, serif',
+          fontSize: '14px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#3498db' }}>
+            {hoveredNodeDetails.name}
+          </h3>
+          <p style={{ margin: '5px 0', fontSize: '12px', color: '#bdc3c7' }}>
+            Type: {hoveredNodeDetails.type}
+          </p>
+        </div>
+      )}
+
       <div
         style={{
-          width: "250px",
-          padding: "10px",
-          background: "#f0f0f0",
+          width: "280px",
+          padding: "20px",
+          background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)",
           overflowY: "auto",
-          borderRight: "1px solid #ddd",
+          borderRight: "1px solid #dee2e6",
+          fontFamily: "'Georgia', 'Times New Roman', serif",
+          boxShadow: "2px 0 10px rgba(0,0,0,0.1)"
         }}
       >
-        <h3>Menu</h3>
-        {Object.keys(data).map((animal) => (
-          <div key={animal} style={{ marginBottom: "5px" }}>
-            <label>
+        <h3 style={{ 
+          margin: "0 0 20px 0", 
+          fontSize: "24px", 
+          fontWeight: "600", 
+          color: "#2c3e50",
+          borderBottom: "2px solid #3498db",
+          paddingBottom: "10px"
+        }}>
+          Network Controls
+        </h3>
+        
+        {/* Book Color Toggle */}
+        <div style={{ 
+          marginBottom: "25px", 
+          padding: "15px", 
+          background: "rgba(52, 152, 219, 0.1)", 
+          borderRadius: "8px",
+          border: "1px solid rgba(52, 152, 219, 0.2)"
+        }}>
+          <label style={{ display: 'flex', alignItems: 'center', fontWeight: '600', color: '#2c3e50' }}>
+            <input
+              type="checkbox"
+              checked={useBookColors}
+              onChange={() => setUseBookColors(!useBookColors)}
+              style={{ marginRight: '10px', transform: 'scale(1.2)' }}
+            />
+            Color by Book
+          </label>
+          <p style={{ fontSize: "12px", color: "#6c757d", margin: "8px 0 0 0", fontStyle: "italic" }}>
+            {useBookColors ? "Essays are colored by their book number" : "Each essay has its own unique color"}
+          </p>
+        </div>
+
+        {/* Essay Selection */}
+        <div style={{ marginBottom: "25px" }}>
+          <h4 style={{ 
+            margin: "0 0 15px 0", 
+            fontSize: "18px", 
+            fontWeight: "600", 
+            color: "#2c3e50",
+            borderBottom: "1px solid #dee2e6",
+            paddingBottom: "5px"
+          }}>
+            Essays
+          </h4>
+          <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+            {Object.keys(data).map((animal) => {
+              const bookNumber = getBookNumber(animal);
+              const bookColor = getBookColor(bookNumber);
+              const individualColor = animalColors[animal];
+              const displayColor = useBookColors ? bookColor : individualColor;
+              
+              return (
+                <div key={animal} style={{ 
+                  marginBottom: "8px",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  background: visibleAnimals[animal] ? "rgba(52, 152, 219, 0.1)" : "rgba(108, 117, 125, 0.1)",
+                  border: visibleAnimals[animal] ? "1px solid rgba(52, 152, 219, 0.3)" : "1px solid rgba(108, 117, 125, 0.2)"
+                }}>
+                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={visibleAnimals[animal]}
+                      onChange={() => toggleAnimalVisibility(animal)}
+                      style={{ marginRight: '10px', transform: 'scale(1.1)' }}
+                    />
+                    <span style={{ 
+                      display: 'inline-block', 
+                      width: '12px', 
+                      height: '12px', 
+                      backgroundColor: displayColor, 
+                      marginRight: '10px',
+                      borderRadius: '3px',
+                      border: '1px solid rgba(0,0,0,0.2)'
+                    }}></span>
+                    <span style={{ 
+                      fontSize: "13px", 
+                      color: visibleAnimals[animal] ? "#2c3e50" : "#6c757d",
+                      fontWeight: visibleAnimals[animal] ? "500" : "400"
+                    }}>
+                      {animal} ({networkStats.nodeDegrees[animal]} {itemTypeLabel.toLowerCase()}s)
+                    </span>
+                    {useBookColors && (
+                      <span style={{ 
+                        fontSize: '10px', 
+                        color: '#6c757d', 
+                        marginLeft: '8px',
+                        fontStyle: 'italic'
+                      }}>
+                        (Book {bookNumber})
+                      </span>
+                    )}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <hr style={{ border: "none", borderTop: "1px solid #dee2e6", margin: "20px 0" }} />
+        
+        {/* Network Statistics */}
+        <div style={{ marginBottom: "25px" }}>
+          <h4 style={{ 
+            margin: "0 0 15px 0", 
+            fontSize: "18px", 
+            fontWeight: "600", 
+            color: "#2c3e50",
+            borderBottom: "1px solid #dee2e6",
+            paddingBottom: "5px"
+          }}>
+            Network Statistics
+          </h4>
+          <div style={{ fontSize: "14px", color: "#495057" }}>
+            <p style={{ margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+              <span>Total {totalNodeLabel}:</span>
+              <span style={{ fontWeight: "600" }}>{networkStats.totalAnimals}</span>
+            </p>
+            <p style={{ margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+              <span>Total {totalItemLabel}:</span>
+              <span style={{ fontWeight: "600" }}>{networkStats.totalFables}</span>
+            </p>
+            <p style={{ margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+              <span>Total Links:</span>
+              <span style={{ fontWeight: "600" }}>{networkStats.totalLinks}</span>
+            </p>
+            <p style={{ margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+              <span>Average Degree:</span>
+              <span style={{ fontWeight: "600" }}>{networkStats.averageDegree.toFixed(2)}</span>
+            </p>
+            <p style={{ margin: "8px 0", display: "flex", justifyContent: "space-between" }}>
+              <span>Density:</span>
+              <span style={{ fontWeight: "600" }}>{networkStats.density.toFixed(4)}</span>
+            </p>
+          </div>
+        </div>
+
+        <hr style={{ border: "none", borderTop: "1px solid #dee2e6", margin: "20px 0" }} />
+        
+        {/* Controls */}
+        <div style={{ marginBottom: "25px" }}>
+          <h4 style={{ 
+            margin: "0 0 15px 0", 
+            fontSize: "18px", 
+            fontWeight: "600", 
+            color: "#2c3e50",
+            borderBottom: "1px solid #dee2e6",
+            paddingBottom: "5px"
+          }}>
+            Controls
+          </h4>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
               <input
                 type="checkbox"
-                checked={visibleAnimals[animal]}
-                onChange={() => toggleAnimalVisibility(animal)}
+                checked={intersectionMode}
+                onChange={() => setIntersectionMode(!intersectionMode)}
+                style={{ marginRight: '10px', transform: 'scale(1.1)' }}
               />
-              {animal} ({networkStats.nodeDegrees[animal]} {itemTypeLabel.toLowerCase()}s)
+              <span style={{ fontSize: "14px", color: "#495057" }}>Intersection Mode</span>
+            </label>
+            <p style={{ fontSize: "11px", color: "#6c757d", margin: "0 0 0 20px", fontStyle: "italic" }}>
+              Show only persons that appear in ALL selected essays
+            </p>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={isRotating}
+                onChange={() => setIsRotating(!isRotating)}
+                style={{ marginRight: '10px', transform: 'scale(1.1)' }}
+              />
+              <span style={{ fontSize: "14px", color: "#495057" }}>Auto-rotate Network</span>
             </label>
           </div>
-        ))}
-        <hr />
-        <h4>Network Statistics</h4>
-        <p>Total {totalNodeLabel}: {networkStats.totalAnimals}</p>
-        <p>Total {totalItemLabel}: {networkStats.totalFables}</p>
-        <p>Total Links: {networkStats.totalLinks}</p>
-        <p>Average Degree: {networkStats.averageDegree.toFixed(2)}</p>
-        <p>Density: {networkStats.density.toFixed(4)}</p>
-        <hr />
-        <label>
-          <input
-            type="checkbox"
-            checked={intersectionMode}
-            onChange={() => setIntersectionMode(!intersectionMode)}
-          />
-          Intersection
-        </label>
-        <hr />
-        <label>
-          <input
-            type="checkbox"
-            checked={isRotating}
-            onChange={() => setIsRotating(!isRotating)}
-          />
-          Auto-rotate Network
-        </label>
-        <hr />
-        <h4>Layout Options</h4>
-        <div style={{ marginBottom: "10px" }}>
-          <label>
-            Layout Type:
-            <select 
-              value={layoutType} 
-              onChange={(e) => setLayoutType(e.target.value as 'random' | 'radial' | 'betweenness' | 'community')}
-              style={{ marginLeft: "10px", padding: "2px" }}
-            >
-              <option value="random">Random</option>
-              <option value="radial">Radial (Degree-based)</option>
-              <option value="betweenness">Betweenness Centrality</option>
-              <option value="community">Community Detection</option>
-            </select>
-          </label>
         </div>
-        <div style={{ fontSize: "12px", color: "#666" }}>
-          <p><strong>Random:</strong> Each node is placed randomly in 3D space. No relationship is captured; use for playful exploration or as a baseline.</p>
-          <p><strong>Radial (Degree-based):</strong> Nodes with more connections (essays with many persons, or persons mentioned in many essays) are closer to the center. Highlights hubs and popular nodes.</p>
-          <p><strong>Betweenness Centrality:</strong> Nodes that act as bridges between groups (high betweenness) are placed at strategic points. Shows which essays or persons connect different parts of the network.</p>
-          <p><strong>Community Detection:</strong> Essays and persons that are closely related (densely connected) are clustered together. Each cluster represents a community of essays and persons with strong mutual connections.</p>
+
+        <hr style={{ border: "none", borderTop: "1px solid #dee2e6", margin: "20px 0" }} />
+        
+        {/* Layout Options */}
+        <div style={{ marginBottom: "20px" }}>
+          <h4 style={{ 
+            margin: "0 0 15px 0", 
+            fontSize: "18px", 
+            fontWeight: "600", 
+            color: "#2c3e50",
+            borderBottom: "1px solid #dee2e6",
+            paddingBottom: "5px"
+          }}>
+            Layout Options
+          </h4>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+              <span style={{ fontSize: "14px", color: "#495057", marginRight: "10px" }}>Layout Type:</span>
+              <select 
+                value={layoutType} 
+                onChange={(e) => setLayoutType(e.target.value as 'random' | 'radial' | 'betweenness' | 'community')}
+                style={{ 
+                  padding: "6px 10px", 
+                  borderRadius: "4px", 
+                  border: "1px solid #ced4da",
+                  fontSize: "13px",
+                  backgroundColor: "white",
+                  color: "#495057"
+                }}
+              >
+                <option value="random">Random</option>
+                <option value="radial">Radial (Degree-based)</option>
+                <option value="betweenness">Betweenness Centrality</option>
+                <option value="community">Community Detection</option>
+              </select>
+            </label>
+          </div>
+          <div style={{ fontSize: "12px", color: "#6c757d", lineHeight: "1.4" }}>
+            <p style={{ margin: "8px 0" }}><strong>Random:</strong> Each node is placed randomly in 3D space.</p>
+            <p style={{ margin: "8px 0" }}><strong>Radial:</strong> Nodes with more connections are closer to the center.</p>
+            <p style={{ margin: "8px 0" }}><strong>Betweenness:</strong> Nodes that act as bridges are placed strategically.</p>
+            <p style={{ margin: "8px 0" }}><strong>Community:</strong> Related nodes are clustered together.</p>
+          </div>
         </div>
       </div>
 
@@ -393,28 +606,21 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
             const normalizedDegree = essayDegree / maxDegree;
             const essayRadius = 0.5 + normalizedDegree * 1.5; // Increased range from 0.3-1.0 to 0.5-2.0
             
+            // Choose color based on toggle
+            const bookNumber = getBookNumber(animal);
+            const bookColor = getBookColor(bookNumber);
+            const individualColor = animalColors[animal];
+            const displayColor = useBookColors ? bookColor : individualColor;
+            
             return (
               <mesh
                 key={animal}
                 position={nodePositions[animal]}
-                onPointerOver={() => setHoveredNode(animal)}
-                onPointerOut={() => setHoveredNode(null)}
+                onPointerOver={() => handleNodeHover(animal, 'essay')}
+                onPointerOut={handleNodeLeave}
               >
                 <sphereGeometry args={[essayRadius, 32, 32]} />
-                <meshStandardMaterial color={animalColors[animal]} />
-                {hoveredNode === animal && (
-                  <Html distanceFactor={10}>
-                    <div
-                      style={{
-                        background: "white",
-                        padding: "2px 4px",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      {animal} ({essayDegree} persons)
-                    </div>
-                  </Html>
-                )}
+                <meshStandardMaterial color={displayColor} />
               </mesh>
             );
           })}
@@ -429,24 +635,11 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
               <mesh
                 key={fable}
                 position={fablePositions[fable]}
-                onPointerOver={() => setHoveredNode(fable)}
-                onPointerOut={() => setHoveredNode(null)}
+                onPointerOver={() => handleNodeHover(fable, 'person')}
+                onPointerOut={handleNodeLeave}
               >
                 <sphereGeometry args={[0.3, 32, 32]} />
                 <meshStandardMaterial color="blue" />
-                {hoveredNode === fable && (
-                  <Html distanceFactor={10}>
-                    <div
-                      style={{
-                        background: "white",
-                        padding: "2px 4px",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      {fable}
-                    </div>
-                  </Html>
-                )}
               </mesh>
             );
           })}
@@ -470,14 +663,22 @@ const Network: React.FC<NetworkProps> = ({ data, metadata }) => {
                   
                   return true;
                 })
-                .map((fable) => (
-                  <Line
-                    key={`${animal}-${fable}-${renderKey}`}
-                    points={[nodePositions[animal], fablePositions[fable]]}
-                    color={animalColors[animal]}
-                    lineWidth={1.5}
-                  />
-                ));
+                .map((fable) => {
+                  // Choose connection color based on toggle
+                  const bookNumber = getBookNumber(animal);
+                  const bookColor = getBookColor(bookNumber);
+                  const individualColor = animalColors[animal];
+                  const displayColor = useBookColors ? bookColor : individualColor;
+                  
+                  return (
+                    <Line
+                      key={`${animal}-${fable}-${renderKey}`}
+                      points={[nodePositions[animal], fablePositions[fable]]}
+                      color={displayColor}
+                      lineWidth={1.5}
+                    />
+                  );
+                });
             })}
         </RotatingGroup>
       </Canvas>

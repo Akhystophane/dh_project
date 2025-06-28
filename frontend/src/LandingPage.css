@@ -352,4 +352,40 @@
   .upload-icon {
     font-size: 2rem;
   }
+}
+
+.options-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.option-item {
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.option-description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-left: 2.25rem;
 } 

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Visualization</title>
+    <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            overflow: hidden;
+        }
+
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .stats {
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .control-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 200;
+        }
+
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(231, 76, 60, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 200;
+        }
+
+        .back-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Loading Screen -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Loading visualization...</div>
+        </div>
+
+        <!-- Error Screen -->
+        <div class="error" id="error" style="display: none;">
+            <h3>Error Loading Data</h3>
+            <p id="errorMessage">No data found. Please go back and upload files.</p>
+            <button class="btn" onclick="window.location.href='landing_page.html'">Go Back</button>
+        </div>
+
+        <!-- UI Panel -->
+        <div id="ui">
+            <div class="title">Network Visualization</div>
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Nodes:</span>
+                    <span class="stat-value" id="nodeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Edges:</span>
+                    <span class="stat-value" id="edgeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Essays:</span>
+                    <span class="stat-value" id="essayCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Persons:</span>
+                    <span class="stat-value" id="personCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div id="controls">
+            <div class="title">Controls</div>
+            
+            <div class="control-group">
+                <label class="control-label">Layout:</label>
+                <select class="control-input" id="layoutSelect">
+                    <option value="random">Random</option>
+                    <option value="radial">Radial</option>
+                    <option value="grid">Grid</option>
+                    <option value="sphere">Sphere</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Node Size:</label>
+                <input type="range" class="control-input" id="nodeSizeSlider" min="0.1" max="2" step="0.1" value="0.5">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Connection Width:</label>
+                <input type="range" class="control-input" id="edgeWidthSlider" min="1" max="5" step="0.5" value="2">
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="rotationToggle" checked>
+                <label for="rotationToggle">Auto Rotation</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="labelsToggle" checked>
+                <label for="labelsToggle">Show Labels</label>
+            </div>
+
+            <button class="btn" id="resetViewBtn">Reset View</button>
+            <button class="btn" id="exportBtn">Export Data</button>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-btn">
+            <button class="btn" onclick="window.location.href='landing_page.html'">← Back to Upload</button>
+        </div>
+    </div>
+
+    <script>
+        class NetworkVisualizer {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.controls = null;
+                this.nodes = [];
+                this.edges = [];
+                this.nodeMeshes = [];
+                this.edgeLines = [];
+                this.data = null;
+                this.autoRotate = true;
+                this.showLabels = true;
+
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                this.setupThreeJS();
+                this.setupControls();
+                this.animate();
+            }
+
+            loadData() {
+                try {
+                    const dataString = localStorage.getItem('networkData');
+                    if (!dataString) {
+                        throw new Error('No data found');
+                    }
+
+                    this.data = JSON.parse(dataString);
+                    this.nodes = this.data.nodes || [];
+                    this.edges = this.data.edges || [];
+
+                    if (this.nodes.length === 0) {
+                        throw new Error('No nodes found in data');
+                    }
+
+                    this.updateStats();
+                    document.getElementById('loading').style.display = 'none';
+
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('errorMessage').textContent = error.message;
+                }
+            }
+
+            updateStats() {
+                const essayNodes = this.nodes.filter(n => n.type === 'essay');
+                const personNodes = this.nodes.filter(n => n.type === 'person');
+
+                document.getElementById('nodeCount').textContent = this.nodes.length;
+                document.getElementById('edgeCount').textContent = this.edges.length;
+                document.getElementById('essayCount').textContent = essayNodes.length;
+                document.getElementById('personCount').textContent = personNodes.length;
+            }
+
+            setupThreeJS() {
+                // Scene
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x1a1a1a);
+
+                // Camera
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 0, 50);
+
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                document.getElementById('container').appendChild(this.renderer.domElement);
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+                this.scene.add(ambientLight);
+
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                directionalLight.castShadow = true;
+                this.scene.add(directionalLight);
+
+                // Create nodes and edges
+                this.createNodes();
+                this.createEdges();
+            }
+
+            createNodes() {
+                this.nodes.forEach((node, index) => {
+                    const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+                    const material = new THREE.MeshPhongMaterial({
+                        color: node.type === 'essay' ? 0x667eea : 0x764ba2,
+                        emissive: node.type === 'essay' ? 0x223366 : 0x442244,
+                        shininess: 100
+                    });
+
+                    const mesh = new THREE.Mesh(geometry, material);
+                    mesh.position.set(node.x || 0, node.y || 0, node.z || 0);
+                    mesh.userData = node;
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+
+                    this.scene.add(mesh);
+                    this.nodeMeshes.push(mesh);
+                });
+            }
+
+            createEdges() {
+                this.edges.forEach(edge => {
+                    const sourceNode = this.nodes.find(n => n.id === edge.source);
+                    const targetNode = this.nodes.find(n => n.id === edge.target);
+
+                    if (sourceNode && targetNode) {
+                        const geometry = new THREE.BufferGeometry().setFromPoints([
+                            new THREE.Vector3(sourceNode.x || 0, sourceNode.y || 0, sourceNode.z || 0),
+                            new THREE.Vector3(targetNode.x || 0, targetNode.y || 0, targetNode.z || 0)
+                        ]);
+
+                        const material = new THREE.LineBasicMaterial({
+                            color: 0x888888,
+                            transparent: true,
+                            opacity: 0.6
+                        });
+
+                        const line = new THREE.Line(geometry, material);
+                        this.scene.add(line);
+                        this.edgeLines.push(line);
+                    }
+                });
+            }
+
+            setupControls() {
+                // Orbit controls
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+                this.controls.autoRotate = this.autoRotate;
+                this.controls.autoRotateSpeed = 2;
+
+                // UI controls
+                document.getElementById('layoutSelect').addEventListener('change', (e) => {
+                    this.applyLayout(e.target.value);
+                });
+
+                document.getElementById('nodeSizeSlider').addEventListener('input', (e) => {
+                    this.updateNodeSizes(parseFloat(e.target.value));
+                });
+
+                document.getElementById('edgeWidthSlider').addEventListener('input', (e) => {
+                    this.updateEdgeWidths(parseFloat(e.target.value));
+                });
+
+                document.getElementById('rotationToggle').addEventListener('change', (e) => {
+                    this.autoRotate = e.target.checked;
+                    this.controls.autoRotate = this.autoRotate;
+                });
+
+                document.getElementById('resetViewBtn').addEventListener('click', () => {
+                    this.resetView();
+                });
+
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    this.exportData();
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            applyLayout(layoutType) {
+                const positions = this.calculateLayout(layoutType);
+                
+                this.nodeMeshes.forEach((mesh, index) => {
+                    const position = positions[index] || { x: 0, y: 0, z: 0 };
+                    
+                    new THREE.Tween(mesh.position)
+                        .to(position, 1000)
+                        .easing(THREE.Easing.Quadratic.Out)
+                        .start();
+                });
+            }
+
+            calculateLayout(layoutType) {
+                const positions = [];
+                const nodeCount = this.nodes.length;
+
+                switch (layoutType) {
+                    case 'radial':
+                        this.nodes.forEach((node, index) => {
+                            const angle = (index / nodeCount) * Math.PI * 2;
+                            const radius = node.type === 'essay' ? 20 : 10;
+                            positions.push({
+                                x: Math.cos(angle) * radius,
+                                y: Math.sin(angle) * radius,
+                                z: 0
+                            });
+                        });
+                        break;
+
+                    case 'grid':
+                        const cols = Math.ceil(Math.sqrt(nodeCount));
+                        this.nodes.forEach((node, index) => {
+                            const row = Math.floor(index / cols);
+                            const col = index % cols;
+                            positions.push({
+                                x: (col - cols/2) * 5,
+                                y: (row - nodeCount/cols/2) * 5,
+                                z: 0
+                            });
+                        });
+                        break;
+
+                    case 'sphere':
+                        this.nodes.forEach((node, index) => {
+                            const phi = Math.acos(-1 + (2 * index) / nodeCount);
+                            const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+                            const radius = 15;
+                            positions.push({
+                                x: radius * Math.cos(theta) * Math.sin(phi),
+                                y: radius * Math.sin(theta) * Math.sin(phi),
+                                z: radius * Math.cos(phi)
+                            });
+                        });
+                        break;
+
+                    default: // random
+                        this.nodes.forEach(() => {
+                            positions.push({
+                                x: (Math.random() - 0.5) * 30,
+                                y: (Math.random() - 0.5) * 30,
+                                z: (Math.random() - 0.5) * 30
+                            });
+                        });
+                }
+
+                return positions;
+            }
+
+            updateNodeSizes(size) {
+                this.nodeMeshes.forEach(mesh => {
+                    mesh.scale.setScalar(size);
+                });
+            }
+
+            updateEdgeWidths(width) {
+                this.edgeLines.forEach(line => {
+                    line.material.linewidth = width;
+                });
+            }
+
+            resetView() {
+                this.camera.position.set(0, 0, 50);
+                this.controls.reset();
+            }
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'network_data.json';
+                link.click();
+                URL.revokeObjectURL(url);
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                THREE.Tween.update();
+                this.controls.update();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize the visualizer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new NetworkVisualizer();
+        });
+    </script>
+</body>
+</html> 

@@ -10,6 +10,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
+  const [includeNotes, setIncludeNotes] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (selectedFiles: FileList | null) => {
@@ -66,6 +67,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
   const processFiles = async () => {
     console.log('🚀 Starting file processing...');
     console.log(`📊 Total files to process: ${files.length}`);
+    console.log(`📝 Include notes: ${includeNotes}`);
     
     if (files.length === 0) {
       console.log('❌ No files to process');
@@ -88,6 +90,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       const steps = [
         'Reading CSV files...',
         'Extracting person names...',
+        'Filtering by notes...',
+        'Removing duplicates...',
         'Building network structure...',
         'Preparing visualization data...'
       ];
@@ -96,7 +100,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         console.log(`🔄 Processing step ${i + 1}: ${steps[i]}`);
         setStatus(steps[i]);
         setProgress(((i + 1) / steps.length) * 100);
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 600));
       }
 
       // Create sample network data
@@ -126,6 +130,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
   const createNetworkData = async () => {
     console.log('🏗️ createNetworkData called');
     console.log(`📁 Processing ${files.length} files`);
+    console.log(`📝 Include notes setting: ${includeNotes}`);
     
     const nodes: any[] = [];
     const edges: any[] = [];
@@ -143,7 +148,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         const lines = fileContent.split('\n').filter(line => line.trim() !== '');
         console.log(`📊 CSV has ${lines.length} lines`);
         
-        // Find the header line and determine which column contains person names
+        // Find the header line and determine which column contains person names and comments
         let personNames: string[] = [];
         let headerLine = '';
         
@@ -151,11 +156,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
           headerLine = lines[0];
           console.log(`📋 Header line: ${headerLine}`);
           
-          // Try to find person name column
+          // Try to find person name column and comment column
           const headers = headerLine.split(',').map(h => h.trim().toLowerCase());
           console.log(`🏷️ Headers found:`, headers);
           
           let personColumnIndex = -1;
+          let commentColumnIndex = -1;
           
           // Look for common person name column headers
           const possibleHeaders = ['person name', 'name', 'person', 'personname', 'person_name'];
@@ -168,21 +174,56 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
             }
           }
           
+          // Look for comment column
+          const commentHeaders = ['comment', 'comments', 'note', 'notes', 'annotation'];
+          for (const commentHeader of commentHeaders) {
+            const index = headers.findIndex(h => h.includes(commentHeader));
+            if (index !== -1) {
+              commentColumnIndex = index;
+              console.log(`✅ Found comment column at index ${index}: "${headers[index]}"`);
+              break;
+            }
+          }
+          
           if (personColumnIndex === -1) {
             // If no specific header found, use the first column
             personColumnIndex = 0;
             console.log(`⚠️ No person name header found, using first column (index 0)`);
           }
           
-          // Extract person names from the data rows (skip header)
-          personNames = lines.slice(1)
+          // Extract person names and comments from the data rows (skip header)
+          const personData = lines.slice(1)
             .map(line => {
               const columns = line.split(',').map(col => col.trim());
-              return columns[personColumnIndex] || '';
+              const personName = columns[personColumnIndex] || '';
+              const comment = commentColumnIndex !== -1 ? (columns[commentColumnIndex] || '') : '';
+              return { personName, comment };
             })
-            .filter(name => name && name.toLowerCase() !== 'nan' && name !== '');
+            .filter(data => data.personName && data.personName.toLowerCase() !== 'nan' && data.personName !== '');
           
-          console.log(`👥 Found ${personNames.length} person names:`, personNames);
+          console.log(`👥 Found ${personData.length} person entries:`, personData);
+          
+          // Filter by notes if needed
+          if (!includeNotes && commentColumnIndex !== -1) {
+            const filteredData = personData.filter(data => 
+              !data.comment.toLowerCase().includes('note') && 
+              !data.comment.toLowerCase().includes('annotation')
+            );
+            console.log(`📝 Filtered out notes: ${personData.length - filteredData.length} entries removed`);
+            personData.splice(0, personData.length, ...filteredData);
+          }
+          
+          // Remove duplicates within the same essay
+          const uniquePersons = new Map<string, { personName: string, comment: string }>();
+          personData.forEach(data => {
+            if (!uniquePersons.has(data.personName)) {
+              uniquePersons.set(data.personName, data);
+            }
+          });
+          
+          personNames = Array.from(uniquePersons.values()).map(data => data.personName);
+          console.log(`🔄 Removed duplicates: ${personData.length - personNames.length} duplicates removed`);
+          console.log(`👥 Final unique persons: ${personNames.length}`, personNames);
         }
         
         // Create essay node
@@ -294,7 +335,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       metadata: {
         total_nodes: nodes.length,
         total_edges: edges.length,
-        files_processed: files.length
+        files_processed: files.length,
+        include_notes: includeNotes
       }
     };
 
@@ -303,7 +345,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       total_edges: result.edges.length,
       files_processed: result.metadata.files_processed,
       essays: result.nodes.filter(n => n.type === 'essay').length,
-      persons: result.nodes.filter(n => n.type === 'person').length
+      persons: result.nodes.filter(n => n.type === 'person').length,
+      include_notes: result.metadata.include_notes
     });
 
     return result;
@@ -429,6 +472,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
             </section>
           )}
 
+          {files.length > 0 && (
+            <section className="options-section">
+              <h2 className="section-title">Processing Options</h2>
+              <div className="option-item">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={includeNotes}
+                    onChange={(e) => setIncludeNotes(e.target.checked)}
+                  />
+                  <span className="checkmark"></span>
+                  Include persons marked as notes/annotations
+                </label>
+                <p className="option-description">
+                  When unchecked, persons with "note" or "annotation" in the comment column will be excluded
+                </p>
+              </div>
+            </section>
+          )}
+
           {isProcessing && (
             <section className="progress-section">
               <h2 className="section-title">Processing Data</h2>
@@ -468,4 +531,4 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
   );
 };
 
-export default LandingPage; 
+export default LandingPage;

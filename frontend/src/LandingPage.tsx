@@ -174,9 +174,9 @@ const LandingPage: React.FC<LandingPageProps> = ({
     return essayName;
   };
 
-  const createNetworkData = async () => {
+  const createNetworkData = async (filesToProcess = files) => {
     console.log('🏗️ createNetworkData called');
-    console.log(`📁 Processing ${files.length} files`);
+    console.log(`📁 Processing ${filesToProcess.length} files`);
     console.log(`📝 Include notes setting: ${includeNotes}`);
     
     const nodes: any[] = [];
@@ -186,9 +186,9 @@ const LandingPage: React.FC<LandingPageProps> = ({
     // Detect node type from file names
     let detectedType = 'Person';
     let detectedTypePlural = 'Persons';
-    if (files.length > 0) {
+    if (filesToProcess.length > 0) {
       // Look for 'places' or 'persons' in any file name
-      const lowerNames = files.map(f => f.name.toLowerCase());
+      const lowerNames = filesToProcess.map(f => f.name.toLowerCase());
       if (lowerNames.some(name => name.includes('places'))) {
         detectedType = 'Place';
         detectedTypePlural = 'Places';
@@ -209,7 +209,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
     // Store mapping from formatted essay names to raw file names
     const essayNameMapping: Record<string, string> = {};
 
-    for (const file of files) {
+    for (const file of filesToProcess) {
       console.log(`📄 Processing file: ${file.name}`);
       
       try {
@@ -411,7 +411,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
       metadata: {
         total_nodes: nodes.length,
         total_edges: edges.length,
-        files_processed: files.length,
+        files_processed: filesToProcess.length,
         include_notes: includeNotes,
         node_types: {
           person: detectedType,
@@ -485,23 +485,114 @@ const LandingPage: React.FC<LandingPageProps> = ({
     }
   }, []);
 
+  // Demo data loading implementation
+  const loadDemoData = async () => {
+    // List of demo CSVs to fetch
+    const demoFiles = [
+      'essays-01-01-persons-OR.csv',
+      'essays-01-02-persons-OR.csv',
+      'essays-01-03-persons-OR.csv',
+      'essays-01-04-persons-OR.csv',
+      'essays-01-05-persons-OR.csv',
+      'essays-01-06-persons-OR.csv',
+      'essays-01-07-persons-OR.csv',
+      'essays-01-08-persons-OR.csv',
+      'essays-01-09-persons-OR.csv',
+      'essays-01-10-persons-OR.csv',
+      'essays-02-01-persons-OR.csv',
+      'essays-02-02-persons-Or.csv',
+      'essays-02-03-persons-OR.csv',
+      'essays-02-04-persons-OR.csv',
+      'essays-02-05-persons-OR.csv',
+      'essays-03-01-persons-OR.csv',
+      'essays-03-02-persons-OR.csv',
+      'essays-03-03-persons-OR.csv',
+      'essays-03-04-persons-OR.csv',
+      'essays-03-05-persons-OR.csv',
+    ];
+    // Use the correct public base URL for Vite
+    const demoFolder = '/dh_project/demo/';
+    console.debug('[loadDemoData] Starting demo data load');
+    console.debug('[loadDemoData] Demo files to fetch:', demoFiles);
+    try {
+      // Fetch all demo CSVs
+      const filePromises = demoFiles.map(async (fileName) => {
+        const url = demoFolder + fileName;
+        console.debug(`[loadDemoData] Fetching: ${url}`);
+        const response = await fetch(url);
+        if (!response.ok) {
+          console.error(`[loadDemoData] Failed to fetch: ${url} (status: ${response.status})`);
+          throw new Error('Failed to fetch ' + fileName);
+        }
+        const text = await response.text();
+        console.debug(`[loadDemoData] Successfully fetched: ${url} (length: ${text.length})`);
+        // Create a File-like object for compatibility with createNetworkData
+        return new File([text], fileName, { type: 'text/csv' });
+      });
+      const fetchedFiles = await Promise.all(filePromises);
+      console.debug('[loadDemoData] All files fetched:', fetchedFiles.map(f => f.name));
+      setFiles(fetchedFiles); // for UI feedback if needed
+      setIsProcessing(true);
+      setProgress(0);
+      setStatus('Processing demo data...');
+      // Pass fetchedFiles directly to createNetworkData
+      const networkData = await createNetworkData(fetchedFiles);
+      setStatus('Demo data loaded!');
+      setIsProcessing(false);
+      console.debug('[loadDemoData] Demo data processed and sent to onDataProcessed');
+      onDataProcessed(networkData);
+    } catch (error) {
+      setStatus('Error loading demo data');
+      setIsProcessing(false);
+      console.error('[loadDemoData] Error loading demo data:', error);
+      alert('Failed to load demo data: ' + error);
+    }
+  };
+
   return (
-    <div className="landing-page">
-      <div className="landing-container">
-        <header className="landing-header">
-          <h1 className="landing-title">Network Visualization Tool</h1>
-          <p className="landing-subtitle">
+    <div className="landing-page" style={{
+      minHeight: '100vh',
+      background: '#f5f5f5',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <div className="landing-container" style={{
+        width: '100%',
+        maxWidth: '800px',
+        margin: '0 auto'
+      }}>
+        <header className="landing-header" style={{
+          textAlign: 'center',
+          marginBottom: '30px'
+        }}>
+          <h1 className="landing-title" style={{
+            fontSize: '36px',
+            color: '#2c3e50',
+            marginBottom: '10px',
+            fontWeight: '600'
+          }}>Network Visualization Tool</h1>
+          <p className="landing-subtitle" style={{
+            fontSize: '16px',
+            color: '#7f8c8d',
+            marginBottom: '20px',
+            fontStyle: 'italic'
+          }}>
             3D visualization of relationships between essays and referenced variables
           </p>
           <div style={{ 
-            marginTop: '20px', 
+            marginTop: '20px',
+            marginBottom: '20px',
             padding: '15px', 
             background: 'rgba(52, 152, 219, 0.1)', 
             borderRadius: '8px',
             border: '1px solid rgba(52, 152, 219, 0.2)',
             fontSize: '14px',
             color: '#495057',
-            lineHeight: '1.5'
+            lineHeight: '1.5',
+            maxWidth: '600px',
+            margin: '20px auto'
           }}>
             <h4 style={{ margin: '0 0 10px 0', color: '#2c3e50', fontSize: '16px' }}>
               Navigation Controls
@@ -533,8 +624,16 @@ const LandingPage: React.FC<LandingPageProps> = ({
         </header>
 
         <main className="landing-main">
-          <section className="upload-section">
-            <h2 className="section-title">Upload CSV Files</h2>
+          <section className="upload-section" style={{
+            marginBottom: '30px'
+          }}>
+            <h2 className="section-title" style={{
+              fontSize: '24px',
+              color: '#2c3e50',
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontWeight: '500'
+            }}>Upload CSV Files</h2>
             
             <div 
               className="upload-area"
@@ -544,10 +643,39 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 console.log('🖱️ Individual files upload area clicked');
                 fileInputRef.current?.click();
               }}
+              style={{
+                border: '2px dashed #bdc3c7',
+                borderRadius: '12px',
+                padding: '40px',
+                textAlign: 'center',
+                background: '#ffffff',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                marginBottom: '10px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#3498db';
+                e.currentTarget.style.background = '#f8f9fa';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#bdc3c7';
+                e.currentTarget.style.background = '#ffffff';
+              }}
             >
-              <div className="upload-icon">📄</div>
-              <h3>CSV Files</h3>
-              <p>Drag and drop CSV files here or click to browse</p>
+              <div className="upload-icon" style={{
+                fontSize: '48px',
+                marginBottom: '10px'
+              }}>📄</div>
+              <h3 style={{
+                fontSize: '20px',
+                color: '#2c3e50',
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}>CSV Files</h3>
+              <p style={{
+                color: '#7f8c8d',
+                fontSize: '14px'
+              }}>Drag and drop CSV files here or click to browse</p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -560,19 +688,82 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 style={{ display: 'none' }}
               />
             </div>
+            
+            {/* Try Demo Data - Small text link */}
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+              <button
+                onClick={loadDemoData}
+                disabled={isProcessing}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#3498db',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: '5px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#2980b9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#3498db'}
+              >
+                Try demo data
+              </button>
+            </div>
           </section>
 
           {files.length > 0 && (
-            <section className="files-section">
-              <h2 className="section-title">Selected Files ({files.length})</h2>
-              <div className="file-list">
+            <section className="files-section" style={{
+              marginBottom: '30px',
+              background: '#ffffff',
+              padding: '20px',
+              borderRadius: '12px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <h2 className="section-title" style={{
+                fontSize: '20px',
+                color: '#2c3e50',
+                marginBottom: '15px',
+                fontWeight: '500'
+              }}>Selected Files ({files.length})</h2>
+              <div className="file-list" style={{
+                maxHeight: '150px',
+                overflowY: 'auto'
+              }}>
                 {files.map((file, index) => (
-                  <div key={index} className="file-item">
-                    <span className="file-name">{file.name}</span>
-                    <span className="file-size">({(file.size / 1024).toFixed(1)} KB)</span>
+                  <div key={index} className="file-item" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '10px',
+                    background: '#f8f9fa',
+                    borderRadius: '6px',
+                    marginBottom: '8px'
+                  }}>
+                    <div>
+                      <span className="file-name" style={{
+                        color: '#2c3e50',
+                        fontWeight: '500',
+                        fontSize: '14px'
+                      }}>{file.name}</span>
+                      <span className="file-size" style={{
+                        color: '#7f8c8d',
+                        fontSize: '12px',
+                        marginLeft: '10px'
+                      }}>({(file.size / 1024).toFixed(1)} KB)</span>
+                    </div>
                     <button 
                       className="remove-btn"
                       onClick={() => removeFile(index)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#e74c3c',
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                        padding: '0 5px'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#c0392b'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#e74c3c'}
                     >
                       ×
                     </button>
@@ -583,24 +774,57 @@ const LandingPage: React.FC<LandingPageProps> = ({
           )}
 
           {files.length > 0 && (
-            <section className="options-section">
-              <h2 className="section-title">Processing Options</h2>
-              <div className="option-item">
-                <label className="checkbox-label">
+            <section className="options-section" style={{
+              marginBottom: '30px',
+              background: '#ffffff',
+              padding: '20px',
+              borderRadius: '12px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <h2 className="section-title" style={{
+                fontSize: '20px',
+                color: '#2c3e50',
+                marginBottom: '15px',
+                fontWeight: '500'
+              }}>Processing Options</h2>
+              <div className="option-item" style={{ marginBottom: '15px' }}>
+                <label className="checkbox-label" style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  cursor: 'pointer'
+                }}>
                   <input
                     type="checkbox"
                     checked={includeNotes}
                     onChange={(e) => setIncludeNotes(e.target.checked)}
+                    style={{
+                      marginRight: '10px',
+                      marginTop: '2px'
+                    }}
                   />
-                  <span className="checkmark"></span>
-                  Include variables marked as notes/annotations
+                  <div>
+                    <span style={{
+                      color: '#2c3e50',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}>Include variables marked as notes/annotations</span>
+                    <p className="option-description" style={{
+                      color: '#7f8c8d',
+                      fontSize: '12px',
+                      marginTop: '4px',
+                      margin: '4px 0 0 0'
+                    }}>
+                      When unchecked, variables with "note" or "annotation" in the comment column will be excluded
+                    </p>
+                  </div>
                 </label>
-                <p className="option-description">
-                  When unchecked, variables with "note" or "annotation" in the comment column will be excluded
-                </p>
               </div>
               <div className="option-item">
-                <label className="checkbox-label">
+                <label className="checkbox-label" style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  cursor: 'pointer'
+                }}>
                   <input
                     type="checkbox"
                     checked={localShowMetadata}
@@ -608,38 +832,106 @@ const LandingPage: React.FC<LandingPageProps> = ({
                       setLocalShowMetadata(e.target.checked);
                       onMetadataToggle?.(e.target.checked);
                     }}
+                    style={{
+                      marginRight: '10px',
+                      marginTop: '2px'
+                    }}
                   />
-                  <span className="checkmark"></span>
-                  Show additional metadata in variable section
+                  <div>
+                    <span style={{
+                      color: '#2c3e50',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}>Show additional metadata in variable section</span>
+                    <p className="option-description" style={{
+                      color: '#7f8c8d',
+                      fontSize: '12px',
+                      marginTop: '4px',
+                      margin: '4px 0 0 0'
+                    }}>
+                      When checked, additional columns from CSV files will be displayed when expanding variables
+                    </p>
+                  </div>
                 </label>
-                <p className="option-description">
-                  When checked, additional columns from CSV files will be displayed when expanding variables
-                </p>
               </div>
             </section>
           )}
 
           {isProcessing && (
-            <section className="progress-section">
-              <h2 className="section-title">Processing Data</h2>
+            <section className="progress-section" style={{
+              marginBottom: '30px',
+              background: '#ffffff',
+              padding: '20px',
+              borderRadius: '12px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <h2 className="section-title" style={{
+                fontSize: '20px',
+                color: '#2c3e50',
+                marginBottom: '15px',
+                fontWeight: '500'
+              }}>Processing Data</h2>
               <div className="progress-container">
-                <div className="progress-bar">
+                <div className="progress-bar" style={{
+                  width: '100%',
+                  height: '8px',
+                  background: '#ecf0f1',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                  marginBottom: '10px'
+                }}>
                   <div 
                     className="progress-fill" 
-                    style={{ width: `${progress}%` }}
+                    style={{ 
+                      width: `${progress}%`,
+                      height: '100%',
+                      background: '#3498db',
+                      transition: 'width 0.3s ease'
+                    }}
                   ></div>
                 </div>
-                <p className="progress-status">{status}</p>
+                <p className="progress-status" style={{
+                  color: '#7f8c8d',
+                  fontSize: '14px',
+                  textAlign: 'center'
+                }}>{status}</p>
               </div>
             </section>
           )}
 
-          <section className="actions-section">
-            <div className="action-buttons">
+          <section className="actions-section" style={{
+            textAlign: 'center'
+          }}>
+            <div className="action-buttons" style={{
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center'
+            }}>
               <button
                 className="btn btn-primary"
                 onClick={processFiles}
                 disabled={files.length === 0 || isProcessing}
+                style={{
+                  padding: '12px 30px',
+                  background: files.length === 0 || isProcessing ? '#95a5a6' : '#3498db',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: files.length === 0 || isProcessing ? 'not-allowed' : 'pointer',
+                  transition: 'background 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (files.length > 0 && !isProcessing) {
+                    e.currentTarget.style.background = '#2980b9';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (files.length > 0 && !isProcessing) {
+                    e.currentTarget.style.background = '#3498db';
+                  }
+                }}
               >
                 {isProcessing ? 'Processing...' : 'Process & Visualize'}
               </button>
@@ -647,6 +939,27 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 className="btn btn-secondary"
                 onClick={clearFiles}
                 disabled={files.length === 0 || isProcessing}
+                style={{
+                  padding: '12px 30px',
+                  background: files.length === 0 || isProcessing ? '#ecf0f1' : '#ecf0f1',
+                  color: files.length === 0 || isProcessing ? '#95a5a6' : '#2c3e50',
+                  border: '1px solid #bdc3c7',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: files.length === 0 || isProcessing ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (files.length > 0 && !isProcessing) {
+                    e.currentTarget.style.background = '#bdc3c7';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (files.length > 0 && !isProcessing) {
+                    e.currentTarget.style.background = '#ecf0f1';
+                  }
+                }}
               >
                 Clear All
               </button>

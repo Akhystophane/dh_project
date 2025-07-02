@@ -60,6 +60,9 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [useConfigData, setUseConfigData] = useState(false);
   const [showAdditionalMetadata, setShowAdditionalMetadata] = useState(true);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoProgress, setDemoProgress] = useState(0);
+  const [demoStatus, setDemoStatus] = useState('');
 
   // Load config.json data on component mount
   useEffect(() => {
@@ -78,7 +81,6 @@ function App() {
             const processedData = convertConfigToNetworkData(configData);
             console.log('Processed data:', processedData.nodes.length, 'nodes, useConfigData will be true');
             setData(processedData);
-            setShowVisualization(true);
             setUseConfigData(true);
             return; // Success, exit the loop
           } else {
@@ -93,6 +95,13 @@ function App() {
     };
 
     loadConfigData();
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.overflowX = 'hidden';
+    document.body.style.overflowX = 'hidden';
+    document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+    document.documentElement.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
   }, []);
 
   const convertConfigToNetworkData = (configData: any): NetworkData => {
@@ -373,6 +382,76 @@ function App() {
   }
 
   // Default: show the landing page
+  if (data.nodes.length > 0 && !showVisualization) {
+    // Debug print
+    console.debug('[App] Config data loaded but network not shown. Showing demo button.');
+    return (
+      <div style={{ width: '100vw', height: '100vh', minHeight: '100vh', minWidth: '100vw', overflowX: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+        <div style={{ width: '95vw', maxWidth: 1100, minWidth: 0, margin: 0, padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+          {/* Try Demo Data button just above upload section */}
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '0 0 12px 0' }}>
+            <button
+              onClick={async () => {
+                setDemoLoading(true);
+                setDemoProgress(0);
+                setDemoStatus('Loading demo data...');
+                // Simulate loading steps for a smooth UX
+                const steps = [
+                  'Loading demo data...',
+                  'Processing nodes...',
+                  'Building network...',
+                  'Preparing visualization...'
+                ];
+                for (let i = 0; i < steps.length; i++) {
+                  setDemoStatus(steps[i]);
+                  setDemoProgress(((i + 1) / steps.length) * 100);
+                  await new Promise(res => setTimeout(res, 400));
+                }
+                setShowVisualization(true);
+                setUseConfigData(true);
+                setDemoLoading(false);
+              }}
+              disabled={demoLoading}
+              style={{
+                padding: '7px 18px',
+                background: demoLoading ? '#7fb3df' : '#3498db',
+                color: 'white',
+                border: 'none',
+                borderRadius: '7px',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: demoLoading ? 'not-allowed' : 'pointer',
+                boxShadow: '0 2px 8px rgba(52,152,219,0.10)',
+                transition: 'background 0.2s',
+                minWidth: 100,
+                marginBottom: 0,
+                marginTop: 0,
+                zIndex: 2
+              }}
+            >
+              {demoLoading ? 'Loading...' : 'Try Demo Data'}
+            </button>
+          </div>
+          {demoLoading && (
+            <div style={{ width: '100%', maxWidth: 350, margin: '0 auto 10px auto' }}>
+              <div style={{ height: 6, background: '#e9ecef', borderRadius: 4, overflow: 'hidden', marginBottom: 6 }}>
+                <div style={{ width: `${demoProgress}%`, height: '100%', background: '#3498db', transition: 'width 0.3s' }}></div>
+              </div>
+              <div style={{ color: '#888', fontSize: 12, textAlign: 'center' }}>{demoStatus}</div>
+            </div>
+          )}
+          <div style={{ width: '100%', maxWidth: 1100, minWidth: 0, margin: 0, padding: 0, zIndex: 1 }}>
+            <LandingPage 
+              onDataProcessed={handleDataProcessed} 
+              showAdditionalMetadata={showAdditionalMetadata}
+              onMetadataToggle={setShowAdditionalMetadata}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <LandingPage 
       onDataProcessed={handleDataProcessed} 

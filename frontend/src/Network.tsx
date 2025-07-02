@@ -219,6 +219,16 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
     }
   };
 
+  // Extract variable type from essay name like "Essay 1 (Book 1) - Events"
+  const getVariableTypeFromEssayName = (essayName: string): string => {
+    const match = essayName.match(/Essay \d+ \(Book \d+\) - ([^-]+)/);
+    if (match) {
+      return match[1].toLowerCase();
+    }
+    // Use the variable type from metadata
+    return itemTypeLabel.toLowerCase();
+  };
+
   // Get the most common variable type from all essay names
   const getMostCommonVariableType = (): string => {
     const variableTypes = Object.keys(data).map(essayName => {
@@ -879,17 +889,6 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
-  // Restore getVariableTypeFromEssayName function:
-  const getVariableTypeFromEssayName = (essayName: string): string => {
-    // Extract variable type from essay name like "Essay 1 (Book 1) - Events"
-    const match = essayName.match(/Essay \d+ \(Book \d+\) - ([^-]+)/);
-    if (match) {
-      return match[1].toLowerCase();
-    }
-    // Use the variable type from metadata
-    return itemTypeLabel.toLowerCase();
-  };
-
   console.debug('[Network] Network component rendering completed');
   return (
     <div style={{ display: "flex", width: "100vw", height: "100vh", position: "relative", overflow: "hidden" }}>
@@ -1408,7 +1407,7 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
               <p style={{ margin: "8px 0" }}><strong>Radial:</strong> Nodes with more connections are closer to the center.</p>
               <p style={{ margin: "8px 0" }}><strong>Betweenness:</strong> Nodes that act as bridges are placed strategically.</p>
               <p style={{ margin: "8px 0" }}><strong>Community:</strong> Related nodes are clustered together.</p>
-              <p style={{ margin: "8px 0" }}><strong>Dynamic:</strong> High-frequency persons are larger and closer to the center.</p>
+              <p style={{ margin: "8px 0" }}><strong>Dynamic:</strong> High-frequency {pluralVariableType.toLowerCase()} are larger and closer to the center.</p>
             </div>
           </div>
         </div>
@@ -1434,7 +1433,8 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>🖱️ Trackpad:</div>
         <div>Scroll: Zoom in/out</div>
-        <div>Space + drag: Rotate</div>
+        <div>Drag: Rotate</div>
+        <div>Cmd/Ctrl + drag: Move</div>
       </div>
 
       <Canvas camera={{ position: [0, 0, 50], fov: 60 }} style={{ flex: 1, minWidth: 0 }}>

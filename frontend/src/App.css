@@ -40,3 +40,24 @@
 .read-the-docs {
   color: #888;
 }
+
+html, body {
+  overflow-x: hidden !important;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* For other scrollable containers, ensure background matches */
+.landing-page, .landing-container, .landing-main, .files-section, .upload-section {
+  background: transparent;
+}

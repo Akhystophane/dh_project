@@ -167,7 +167,10 @@ interface NetworkProps {
   showAdditionalMetadata?: boolean;
 }
 
+console.debug('[Network] Network component loaded');
+
 const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadata = true }) => {
+  console.debug('[Network] Network component rendering');
   // These must be first!
   const itemTypeLabel = metadata?.node_types?.person || metadata?.node_types?.item || "Person";
   const itemTypeLabelPlural = metadata?.node_types?.person_plural || metadata?.node_types?.item_plural || (itemTypeLabel.endsWith('s') ? itemTypeLabel : itemTypeLabel + "s");
@@ -887,6 +890,7 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
     return itemTypeLabel.toLowerCase();
   };
 
+  console.debug('[Network] Network component rendering completed');
   return (
     <div style={{ display: "flex", width: "100vw", height: "100vh", position: "relative", overflow: "hidden" }}>
       {/* Hover Overlay - Responsive positioning */}
@@ -1563,4 +1567,5 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
   );
 };
 
+console.debug('[Network] Network component export');
 export default Network;

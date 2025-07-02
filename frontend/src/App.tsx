@@ -51,7 +51,10 @@ const defaultData: NetworkData = {
   }
 };
 
+console.debug('[App] App component loaded');
+
 function App() {
+  console.debug('[App] App component rendering');
   const [data, setData] = useState<NetworkData>(defaultData);
   const [showVisualization, setShowVisualization] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +64,7 @@ function App() {
   // Load config.json data on component mount
   useEffect(() => {
     const loadConfigData = async () => {
+      console.debug('[App] loadConfigData called');
       const paths = ['/dh_project/config.json', './config.json', '/config.json'];
       
       for (const path of paths) {
@@ -92,6 +96,7 @@ function App() {
   }, []);
 
   const convertConfigToNetworkData = (configData: any): NetworkData => {
+    console.debug('[App] convertConfigToNetworkData called');
     console.log('Converting config data...');
     const nodes: Node[] = [];
     const edges: Edge[] = [];
@@ -130,6 +135,7 @@ function App() {
 
     // First pass: create essay nodes and store their names
     configData.data.nodes.forEach((node: any) => {
+      console.debug(`[App] Processing node:`, node);
       if (node.type === 'essay') {
         const essayName = node.properties?.essay_name || node.label;
         const formattedEssayName = formatEssayName(essayName);
@@ -185,6 +191,7 @@ function App() {
 
     // Process edges from config
     configData.data.edges.forEach((edge: any) => {
+      console.debug(`[App] Processing edge:`, edge);
       if (edge.label === 'contains' || edge.label === 'shares_persons') {
         edges.push({
           source: edge.source.toString(),
@@ -196,6 +203,7 @@ function App() {
 
     // Build person counts by essay from the data
     nodes.forEach((node) => {
+      console.debug(`[App] Building person counts for node:`, node);
       if (node.type === 'person') {
         const essayName = personToEssayMap[node.id];
         if (essayName) {
@@ -210,6 +218,7 @@ function App() {
     // Build person metadata mapping
     const personMetadata: Record<string, Record<string, any>> = {};
     nodes.forEach((node) => {
+      console.debug(`[App] Building person metadata for node:`, node);
       if (node.type === 'person' && node.metadata) {
         personMetadata[node.label] = node.metadata;
       }
@@ -237,12 +246,14 @@ function App() {
   };
 
   const handleDataProcessed = (processedData: NetworkData) => {
+    console.debug('[App] handleDataProcessed called', processedData);
     setData(processedData);
     setShowVisualization(true);
     setUseConfigData(false);
   };
 
   const handleBackToLanding = () => {
+    console.debug('[App] handleBackToLanding called');
     setShowVisualization(false);
     setData(defaultData);
     setError(null);
@@ -251,6 +262,7 @@ function App() {
 
   // If we have data and should show visualization, render the network
   if (showVisualization && data.nodes.length > 0) {
+    console.debug('[App] Rendering Network component with data:', data);
     // Convert the processed data format to the format expected by Network component
     const networkData: Record<string, string[]> = {};
     
@@ -325,7 +337,8 @@ function App() {
 
   // Show error state if needed
   if (error) {
-  return (
+    console.error('[App] Error state:', error);
+    return (
       <div style={{ 
         width: "100vw", 
         height: "100vh", 
@@ -369,4 +382,5 @@ function App() {
   );
 }
 
+console.debug('[App] App component export');
 export default App

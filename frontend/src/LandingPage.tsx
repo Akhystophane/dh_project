@@ -7,11 +7,14 @@ interface LandingPageProps {
   onMetadataToggle?: (show: boolean) => void;
 }
 
+console.debug('[LandingPage] LandingPage component loaded');
+
 const LandingPage: React.FC<LandingPageProps> = ({ 
   onDataProcessed, 
   showAdditionalMetadata = true, 
   onMetadataToggle 
 }) => {
+  console.debug('[LandingPage] LandingPage component rendering');
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -655,4 +658,5 @@ const LandingPage: React.FC<LandingPageProps> = ({
   );
 };
 
+console.debug('[LandingPage] LandingPage component export');
 export default LandingPage;

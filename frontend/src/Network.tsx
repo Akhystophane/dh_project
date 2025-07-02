@@ -1557,6 +1557,8 @@ const Network: React.FC<NetworkProps> = ({ data, metadata, showAdditionalMetadat
                       points={[nodePositions[animal], fablePositions[fable]]}
                       color={displayColor}
                       lineWidth={1.5}
+                      derivatives={false}
+                      format={undefined}
                     />
                   );
                 });

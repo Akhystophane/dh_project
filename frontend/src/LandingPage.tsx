@@ -3,14 +3,21 @@ import './LandingPage.css';
 
 interface LandingPageProps {
   onDataProcessed: (data: any) => void;
+  showAdditionalMetadata?: boolean;
+  onMetadataToggle?: (show: boolean) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ 
+  onDataProcessed, 
+  showAdditionalMetadata = true, 
+  onMetadataToggle 
+}) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [includeNotes, setIncludeNotes] = useState(false);
+  const [localShowMetadata, setLocalShowMetadata] = useState(showAdditionalMetadata);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (selectedFiles: FileList | null) => {
@@ -89,7 +96,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       // Simulate processing steps
       const steps = [
         'Reading CSV files...',
-        'Extracting person names...',
+        'Extracting variable names...',
         'Filtering by notes...',
         'Removing duplicates...',
         'Building network structure...',
@@ -127,6 +134,43 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
     }
   };
 
+  // Helper function to format essay names
+  const formatEssayName = (essayName: string): string => {
+    console.log(`🔧 Formatting essay name: "${essayName}"`);
+    
+    // Convert "essays-01-03-persons-OR" to "Essay 3 (Book 1) - Persons"
+    const match = essayName.match(/essays-(\d{2})-(\d{2})-([^-]+)(?:-([^-]+))?/);
+    if (match) {
+      const bookNumber = parseInt(match[1]);
+      const essayNumber = parseInt(match[2]);
+      const thingType = match[3]; // persons, places, etc.
+      const optionalSuffix = match[4]; // OR or other optional suffix
+      
+      console.log(`✅ New format match: bookNumber=${bookNumber}, essayNumber=${essayNumber}, thingType=${thingType}, optionalSuffix=${optionalSuffix}`);
+      
+      let formattedName = `Essay ${essayNumber} (Book ${bookNumber}) - ${thingType.charAt(0).toUpperCase() + thingType.slice(1)}`;
+      if (optionalSuffix && optionalSuffix.toLowerCase() !== 'nan' && optionalSuffix !== '') {
+        formattedName += ` - ${optionalSuffix}`;
+      }
+      console.log(`📝 Formatted name: "${formattedName}"`);
+      return formattedName;
+    }
+    
+    // Fallback: try to parse the old format "essays 01_04 persons"
+    const oldMatch = essayName.match(/essays (\d{2})_(\d{2})/);
+    if (oldMatch) {
+      const bookNumber = parseInt(oldMatch[1]);
+      const essayNumber = parseInt(oldMatch[2]);
+      console.log(`✅ Old format match: bookNumber=${bookNumber}, essayNumber=${essayNumber}`);
+      const formattedName = `Essay ${essayNumber} (Book ${bookNumber})`;
+      console.log(`📝 Formatted name: "${formattedName}"`);
+      return formattedName;
+    }
+    
+    console.log(`❌ No format match found, returning original: "${essayName}"`);
+    return essayName;
+  };
+
   const createNetworkData = async () => {
     console.log('🏗️ createNetworkData called');
     console.log(`📁 Processing ${files.length} files`);
@@ -135,6 +179,32 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
     const nodes: any[] = [];
     const edges: any[] = [];
     let nodeId = 1;
+
+    // Detect node type from file names
+    let detectedType = 'Person';
+    let detectedTypePlural = 'Persons';
+    if (files.length > 0) {
+      // Look for 'places' or 'persons' in any file name
+      const lowerNames = files.map(f => f.name.toLowerCase());
+      if (lowerNames.some(name => name.includes('places'))) {
+        detectedType = 'Place';
+        detectedTypePlural = 'Places';
+      } else if (lowerNames.some(name => name.includes('persons'))) {
+        detectedType = 'Person';
+        detectedTypePlural = 'Persons';
+      }
+    }
+
+    // For counting occurrences
+    const variableCounts: Record<string, number> = {};
+    // Store all counts by essay
+    const resultVariableCountsByEssay: Record<string, Record<string, number>> = {};
+    // Store all metadata columns found
+    const allMetadataColumns = new Set<string>();
+    // Store metadata for each variable
+    const variableMetadata: Record<string, Record<string, any>> = {};
+    // Store mapping from formatted essay names to raw file names
+    const essayNameMapping: Record<string, string> = {};
 
     for (const file of files) {
       console.log(`📄 Processing file: ${file.name}`);
@@ -148,88 +218,101 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         const lines = fileContent.split('\n').filter(line => line.trim() !== '');
         console.log(`📊 CSV has ${lines.length} lines`);
         
-        // Find the header line and determine which column contains person names and comments
-        let personNames: string[] = [];
-        let headerLine = '';
+        if (lines.length === 0) {
+          console.log(`⚠️ Empty CSV file: ${file.name}`);
+          continue;
+        }
+
+        // Get headers from first line
+        const headerLine = lines[0];
+        console.log(`📋 Header line: "${headerLine}"`);
         
-        if (lines.length > 0) {
-          headerLine = lines[0];
-          console.log(`📋 Header line: ${headerLine}`);
-          
-          // Try to find person name column and comment column
-          const headers = headerLine.split(',').map(h => h.trim().toLowerCase());
+        const headers = headerLine.split(',').map(h => h.trim());
           console.log(`🏷️ Headers found:`, headers);
           
-          let personColumnIndex = -1;
-          let commentColumnIndex = -1;
-          
-          // Look for common person name column headers
-          const possibleHeaders = ['person name', 'name', 'person', 'personname', 'person_name'];
-          for (const possibleHeader of possibleHeaders) {
-            const index = headers.findIndex(h => h.includes(possibleHeader));
-            if (index !== -1) {
-              personColumnIndex = index;
-              console.log(`✅ Found person column at index ${index}: "${headers[index]}"`);
-              break;
-            }
-          }
-          
-          // Look for comment column
-          const commentHeaders = ['comment', 'comments', 'note', 'notes', 'annotation'];
-          for (const commentHeader of commentHeaders) {
-            const index = headers.findIndex(h => h.includes(commentHeader));
-            if (index !== -1) {
-              commentColumnIndex = index;
-              console.log(`✅ Found comment column at index ${index}: "${headers[index]}"`);
-              break;
-            }
-          }
-          
-          if (personColumnIndex === -1) {
-            // If no specific header found, use the first column
-            personColumnIndex = 0;
-            console.log(`⚠️ No person name header found, using first column (index 0)`);
-          }
-          
-          // Extract person names and comments from the data rows (skip header)
-          const personData = lines.slice(1)
-            .map(line => {
-              const columns = line.split(',').map(col => col.trim());
-              const personName = columns[personColumnIndex] || '';
-              const comment = commentColumnIndex !== -1 ? (columns[commentColumnIndex] || '') : '';
-              return { personName, comment };
-            })
-            .filter(data => data.personName && data.personName.toLowerCase() !== 'nan' && data.personName !== '');
-          
-          console.log(`👥 Found ${personData.length} person entries:`, personData);
-          
-          // Filter by notes if needed
-          if (!includeNotes && commentColumnIndex !== -1) {
-            const filteredData = personData.filter(data => 
-              !data.comment.toLowerCase().includes('note') && 
-              !data.comment.toLowerCase().includes('annotation')
-            );
-            console.log(`📝 Filtered out notes: ${personData.length - filteredData.length} entries removed`);
-            personData.splice(0, personData.length, ...filteredData);
-          }
-          
-          // Remove duplicates within the same essay
-          const uniquePersons = new Map<string, { personName: string, comment: string }>();
-          personData.forEach(data => {
-            if (!uniquePersons.has(data.personName)) {
-              uniquePersons.set(data.personName, data);
-            }
-          });
-          
-          personNames = Array.from(uniquePersons.values()).map(data => data.personName);
-          console.log(`🔄 Removed duplicates: ${personData.length - personNames.length} duplicates removed`);
-          console.log(`👥 Final unique persons: ${personNames.length}`, personNames);
+        if (headers.length === 0) {
+          console.log(`⚠️ No headers found in: ${file.name}`);
+          continue;
         }
+
+        // First column is always the main variable
+        const mainVariableColumn = headers[0];
+        console.log(`✅ Main variable column: "${mainVariableColumn}"`);
         
-        // Create essay node
+        // All other columns are metadata
+        const metadataColumns = headers.slice(1);
+        console.log(`📊 Metadata columns:`, metadataColumns);
+        
+        // Add metadata columns to global set
+        metadataColumns.forEach(col => allMetadataColumns.add(col));
+        
+        // Extract data from rows (skip header)
+        const dataRows = lines.slice(1);
+        console.log(`📊 Processing ${dataRows.length} data rows`);
+        
+        const variables: string[] = [];
+        const variableDataMap = new Map<string, Record<string, string>>();
+        
+                 dataRows.forEach((row, rowIndex) => {
+           console.log(`📝 Processing row ${rowIndex + 1}: "${row}"`);
+           
+           const columns = row.split(',').map(col => col.trim());
+           console.log(`📊 Row columns:`, columns);
+           
+           if (columns.length === 0) {
+             console.log(`⚠️ Empty row ${rowIndex + 1}`);
+             return;
+           }
+           
+           const variableName = columns[0];
+           console.log(`🎯 Variable name: "${variableName}"`);
+           
+           if (!variableName || variableName.toLowerCase() === 'nan' || variableName === '') {
+             console.log(`⚠️ Skipping empty/invalid variable name`);
+             return;
+           }
+           
+           // Create metadata object from other columns
+           const metadata: Record<string, string> = {};
+           console.log(`🔍 Extracting metadata for "${variableName}":`);
+           metadataColumns.forEach((header, index) => {
+             const value = columns[index + 1] || '';
+             console.log(`  📊 Column ${index + 1}: "${header}" = "${value}"`);
+             if (value && value.toLowerCase() !== 'nan' && value !== '') {
+               metadata[header] = value;
+               console.log(`    ✅ Added metadata: ${header} = "${value}"`);
+             } else {
+               console.log(`    ⚠️ Skipping empty value for ${header}`);
+             }
+           });
+           
+           console.log(`📋 Final metadata for "${variableName}":`, metadata);
+          
+          // Store variable and its metadata
+          if (!variableDataMap.has(variableName)) {
+            variableDataMap.set(variableName, metadata);
+            variables.push(variableName);
+            variableCounts[variableName] = (variableCounts[variableName] || 0) + 1;
+            console.log(`✅ Added variable: "${variableName}" with metadata:`, metadata);
+          } else {
+            // Variable already exists, merge metadata
+            const existingMetadata = variableDataMap.get(variableName)!;
+            Object.assign(existingMetadata, metadata);
+            variableCounts[variableName]++;
+            console.log(`🔄 Updated existing variable: "${variableName}"`);
+          }
+        });
+        
+        console.log(`👥 Found ${variables.length} unique variables in ${file.name}`);
+        console.log(`📊 Variable counts:`, variableCounts);
+        
+        // Create essay node with formatted name
+        const rawEssayName = file.name.replace('.csv', '');
+        const formattedEssayName = formatEssayName(rawEssayName);
+        
         const essayNode = {
           id: `essay_${file.name}`,
-          label: file.name.replace('.csv', ''),
+          label: formattedEssayName,
           type: 'essay',
           x: (Math.random() - 0.5) * 20,
           y: (Math.random() - 0.5) * 20,
@@ -238,58 +321,44 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         nodes.push(essayNode);
         console.log(`📝 Created essay node: ${essayNode.label}`);
         
-        // Create person nodes from actual CSV data
-        if (personNames.length > 0) {
-          console.log(`👥 Creating ${personNames.length} person nodes for essay: ${essayNode.label}`);
-          
-          personNames.forEach((personName) => {
-            const personNode = {
-              id: `person_${nodeId}`,
-              label: personName, // Use actual person name
-              type: 'person',
+        // Store mapping from formatted name to raw name
+        essayNameMapping[formattedEssayName] = file.name;
+        
+        // Store counts for this essay using the raw essay name as key
+        resultVariableCountsByEssay[file.name] = { ...variableCounts };
+        
+                 // Create variable nodes
+         variables.forEach((variableName) => {
+           const metadata = variableDataMap.get(variableName) || {};
+           console.log(`🏗️ Creating node for "${variableName}" with metadata:`, metadata);
+           
+           const variableNode = {
+             id: `variable_${nodeId}`,
+             label: variableName,
+             type: 'person', // Keep as 'person' for compatibility
               x: (Math.random() - 0.5) * 10,
               y: (Math.random() - 0.5) * 10,
-              z: (Math.random() - 0.5) * 10
-            };
-            nodes.push(personNode);
+             z: (Math.random() - 0.5) * 10,
+             metadata: metadata
+           };
+           nodes.push(variableNode);
+           
+           // Store metadata globally
+           variableMetadata[variableName] = metadata;
+           console.log(`💾 Stored metadata for "${variableName}" in global map:`, variableMetadata[variableName]);
 
             // Create connection
             edges.push({
               source: essayNode.id,
-              target: personNode.id,
+             target: variableNode.id,
               label: 'mentions'
             });
 
             nodeId++;
-            console.log(`👤 Created person node: ${personName}`);
-          });
-        } else {
-          // Fallback: create some sample person nodes if no data found
-          console.log(`⚠️ No person names found in CSV, creating sample data`);
-          const personCount = Math.floor(Math.random() * 5) + 2;
-          
-          for (let i = 0; i < personCount; i++) {
-            const personNode = {
-              id: `person_${nodeId}`,
-              label: `Sample Person ${i + 1}`,
-              type: 'person',
-              x: (Math.random() - 0.5) * 10,
-              y: (Math.random() - 0.5) * 10,
-              z: (Math.random() - 0.5) * 10
-            };
-            nodes.push(personNode);
-
-            edges.push({
-              source: essayNode.id,
-              target: personNode.id,
-              label: 'mentions'
-            });
-
-            nodeId++;
-          }
-        }
+           console.log(`👤 Created variable node: "${variableName}" with metadata:`, metadata);
+         });
         
-        console.log(`✅ Completed processing file: ${file.name} (${personNames.length} persons)`);
+        console.log(`✅ Completed processing file: ${file.name} (${variables.length} variables)`);
         
       } catch (error) {
         console.error(`❌ Error processing file ${file.name}:`, error);
@@ -305,22 +374,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         };
         nodes.push(essayNode);
         
-        // Add some sample person nodes
-        const personCount = 3;
-        for (let i = 0; i < personCount; i++) {
-          const personNode = {
-            id: `person_${nodeId}`,
-            label: `Error Person ${i + 1}`,
+        // Add some sample variable nodes
+        const variableCount = 3;
+        for (let i = 0; i < variableCount; i++) {
+          const variableNode = {
+            id: `variable_${nodeId}`,
+            label: `Error Variable ${i + 1}`,
             type: 'person',
             x: (Math.random() - 0.5) * 10,
             y: (Math.random() - 0.5) * 10,
             z: (Math.random() - 0.5) * 10
           };
-          nodes.push(personNode);
+          nodes.push(variableNode);
 
           edges.push({
             source: essayNode.id,
-            target: personNode.id,
+            target: variableNode.id,
             label: 'mentions'
           });
 
@@ -329,6 +398,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       }
     }
 
+    // Update available columns
+    const availableCols = Array.from(allMetadataColumns);
+    console.log(`📊 Final available metadata columns:`, availableCols);
+
     const result = {
       nodes,
       edges,
@@ -336,7 +409,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         total_nodes: nodes.length,
         total_edges: edges.length,
         files_processed: files.length,
-        include_notes: includeNotes
+        include_notes: includeNotes,
+        node_types: {
+          person: detectedType,
+          person_plural: detectedTypePlural,
+          item: detectedType,
+          item_plural: detectedTypePlural,
+          essay: 'Essay',
+          essay_plural: 'Essays'
+        },
+        person_counts_by_essay: resultVariableCountsByEssay,
+        person_metadata: variableMetadata,
+        available_metadata_columns: availableCols,
+        essay_name_mapping: essayNameMapping
       }
     };
 
@@ -345,8 +430,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
       total_edges: result.edges.length,
       files_processed: result.metadata.files_processed,
       essays: result.nodes.filter(n => n.type === 'essay').length,
-      persons: result.nodes.filter(n => n.type === 'person').length,
-      include_notes: result.metadata.include_notes
+      variables: result.nodes.filter(n => n.type === 'person').length,
+      include_notes: result.metadata.include_notes,
+      available_columns: availableCols
+    });
+    
+    console.log('🔍 Final metadata structure:', {
+      person_metadata: result.metadata.person_metadata,
+      available_metadata_columns: result.metadata.available_metadata_columns,
+      sample_metadata: Object.keys(result.metadata.person_metadata).slice(0, 3).map(key => ({
+        variable: key,
+        metadata: result.metadata.person_metadata[key]
+      }))
     });
 
     return result;
@@ -367,13 +462,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
     });
   };
 
-  // Debug: Log current files state whenever it changes
+  // Reset component state when it mounts (when returning from Network)
   React.useEffect(() => {
-    console.log(`📋 Current files state updated: ${files.length} files`);
-    files.forEach((file, index) => {
-      console.log(`  ${index + 1}. ${file.name}`);
-    });
-  }, [files]);
+    // Use a single state update to prevent multiple re-renders
+    setFiles([]);
+    setIsProcessing(false);
+    setProgress(0);
+    setStatus('');
+    
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    
+    // Clear any remaining intervals
+    const intervals = window.setInterval(() => {}, 999999);
+    for (let i = 1; i < intervals; i++) {
+      window.clearInterval(i);
+    }
+  }, []);
 
   return (
     <div className="landing-page">
@@ -381,7 +488,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
         <header className="landing-header">
           <h1 className="landing-title">Network Visualization Tool</h1>
           <p className="landing-subtitle">
-            3D visualization of relationships between essays and referenced persons
+            3D visualization of relationships between essays and referenced variables
           </p>
           <div style={{ 
             marginTop: '20px', 
@@ -483,10 +590,27 @@ const LandingPage: React.FC<LandingPageProps> = ({ onDataProcessed }) => {
                     onChange={(e) => setIncludeNotes(e.target.checked)}
                   />
                   <span className="checkmark"></span>
-                  Include persons marked as notes/annotations
+                  Include variables marked as notes/annotations
                 </label>
                 <p className="option-description">
-                  When unchecked, persons with "note" or "annotation" in the comment column will be excluded
+                  When unchecked, variables with "note" or "annotation" in the comment column will be excluded
+                </p>
+              </div>
+              <div className="option-item">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={localShowMetadata}
+                    onChange={(e) => {
+                      setLocalShowMetadata(e.target.checked);
+                      onMetadataToggle?.(e.target.checked);
+                    }}
+                  />
+                  <span className="checkmark"></span>
+                  Show additional metadata in variable section
+                </label>
+                <p className="option-description">
+                  When checked, additional columns from CSV files will be displayed when expanding variables
                 </p>
               </div>
             </section>
